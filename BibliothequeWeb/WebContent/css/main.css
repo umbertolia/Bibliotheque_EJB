@@ -1,0 +1,53 @@
+table.table-style-two {
+	font-family: verdana, arial, sans-serif;
+	font-size: 11px;
+	color: #333333;
+	border-width: 1px;
+	border-color: #3A3A3A;
+	border-collapse: collapse;
+}
+
+table.table-style-two th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #517994;
+	background-color: #B2CFD8;
+}
+
+table.table-style-two tr:hover td {
+	background-color: #DFEBF1;
+}
+
+table.table-style-two td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #517994;
+	background-color: #ffffff;
+}
+
+form {
+	background: -webkit-linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
+	background: -moz-linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
+	background: linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
+	width: 50%;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 14px;
+	font-style: italic;
+	line-height: 24px;
+	font-weight: bold;
+	color: #09C;
+	text-decoration: none;
+	border-radius: 10px;
+	padding: 10px;
+	border: 1px solid #999;
+	border: inset 1px solid #333;
+	-webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+}
+
+.erreur {
+ color: #FF0000;
+}
