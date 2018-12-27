@@ -10,11 +10,12 @@
 	<title>BIBLIOTHEQUE</title>
 	</head>
 <body>
-<div id="global">
-	<div id="container" style="width: 50%">
-		<div id="personneForm">
+
+<table>
+	<tr>
+		<td valign="top">
 				<form action="personne" method="get" id="personneForm">
-				<h1>Personne</h1>
+				<h2>Personne</h2>
 					<table>
 					<tr>
 							<td>Id</td>
@@ -36,14 +37,13 @@
 						</tr>
 					</table>
 				</form>
-		</div>
-	</div>
-	<div id="container" style="width: 50%">
-		<div id="rechercheForm">
+		</td>	
+		<td valign="top">				
 			<form action="article" method="get" id="articleForm">
+				<h2>Article</h2>
 				<table>
 					<tr>
-						<td>Ref. Article</td>
+						<td>Référence</td>
 						<td><input type="number" min="1" step="1" name="reference" id="reference" value="${reference}"></td>
 						<td>${errCode}</td> 
 					</tr>
@@ -59,7 +59,7 @@
 					</tr>
 				</table>
 			</form>
-		</div>
+
 		<c:if test="${(articles!=null)||(mtMsgErr!=null)}">
 			<p>
 			<div id="articles">
@@ -121,7 +121,12 @@
 				</form>
 			</div>
 		</c:if>
-	</div>
-</div>
+
+		</td>
+	</tr>
+	</table>	
+	
+
+
 </body>
 </html>

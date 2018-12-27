@@ -1,0 +1,137 @@
+<wsdl:definitions xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://service/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="BibliothequeSoapServiceService" targetNamespace="http://service/">
+<wsdl:types>
+<xs:schema xmlns:tns="http://service/" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://service/">
+<xs:element name="ajouterLivre" type="tns:ajouterLivre"/>
+<xs:element name="ajouterLivreResponse" type="tns:ajouterLivreResponse"/>
+<xs:element name="consulterParRef" type="tns:consulterParRef"/>
+<xs:element name="consulterParRefResponse" type="tns:consulterParRefResponse"/>
+<xs:element name="consulterParTitre" type="tns:consulterParTitre"/>
+<xs:element name="consulterParTitreResponse" type="tns:consulterParTitreResponse"/>
+<xs:complexType name="consulterParTitre">
+<xs:sequence>
+<xs:element minOccurs="0" name="intitule" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="consulterParTitreResponse">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:article"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType abstract="true" name="article">
+<xs:sequence>
+<xs:element name="disponible" type="xs:boolean"/>
+<xs:element minOccurs="0" name="intitule" type="xs:string"/>
+<xs:element minOccurs="0" name="reference" type="xs:long"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="consulterParRef">
+<xs:sequence>
+<xs:element name="reference" type="xs:long"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="consulterParRefResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:article"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ajouterLivre">
+<xs:sequence>
+<xs:element name="reference" type="xs:long"/>
+<xs:element minOccurs="0" name="intitule" type="xs:string"/>
+<xs:element minOccurs="0" name="date" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ajouterLivreResponse">
+<xs:sequence/>
+</xs:complexType>
+<xs:element name="Exception" type="tns:Exception"/>
+<xs:complexType name="Exception">
+<xs:sequence>
+<xs:element minOccurs="0" name="message" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
+</wsdl:types>
+<wsdl:message name="ajouterLivreResponse">
+<wsdl:part element="tns:ajouterLivreResponse" name="parameters"> </wsdl:part>
+</wsdl:message>
+<wsdl:message name="consulterParRefResponse">
+<wsdl:part element="tns:consulterParRefResponse" name="parameters"> </wsdl:part>
+</wsdl:message>
+<wsdl:message name="consulterParTitreResponse">
+<wsdl:part element="tns:consulterParTitreResponse" name="parameters"> </wsdl:part>
+</wsdl:message>
+<wsdl:message name="ajouterLivre">
+<wsdl:part element="tns:ajouterLivre" name="parameters"> </wsdl:part>
+</wsdl:message>
+<wsdl:message name="consulterParRef">
+<wsdl:part element="tns:consulterParRef" name="parameters"> </wsdl:part>
+</wsdl:message>
+<wsdl:message name="Exception">
+<wsdl:part element="tns:Exception" name="Exception"> </wsdl:part>
+</wsdl:message>
+<wsdl:message name="consulterParTitre">
+<wsdl:part element="tns:consulterParTitre" name="parameters"> </wsdl:part>
+</wsdl:message>
+<wsdl:portType name="BibliothequeSoapService">
+<wsdl:operation name="consulterParTitre">
+<wsdl:input message="tns:consulterParTitre" name="consulterParTitre"> </wsdl:input>
+<wsdl:output message="tns:consulterParTitreResponse" name="consulterParTitreResponse"> </wsdl:output>
+<wsdl:fault message="tns:Exception" name="Exception"> </wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="consulterParRef">
+<wsdl:input message="tns:consulterParRef" name="consulterParRef"> </wsdl:input>
+<wsdl:output message="tns:consulterParRefResponse" name="consulterParRefResponse"> </wsdl:output>
+<wsdl:fault message="tns:Exception" name="Exception"> </wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="ajouterLivre">
+<wsdl:input message="tns:ajouterLivre" name="ajouterLivre"> </wsdl:input>
+<wsdl:output message="tns:ajouterLivreResponse" name="ajouterLivreResponse"> </wsdl:output>
+<wsdl:fault message="tns:Exception" name="Exception"> </wsdl:fault>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="BibliothequeSoapServiceServiceSoapBinding" type="tns:BibliothequeSoapService">
+<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="consulterParTitre">
+<soap:operation soapAction="" style="document"/>
+<wsdl:input name="consulterParTitre">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="consulterParTitreResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="consulterParRef">
+<soap:operation soapAction="" style="document"/>
+<wsdl:input name="consulterParRef">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="consulterParRefResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="ajouterLivre">
+<soap:operation soapAction="" style="document"/>
+<wsdl:input name="ajouterLivre">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="ajouterLivreResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="Exception">
+<soap:fault name="Exception" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="BibliothequeSoapServiceService">
+<wsdl:port binding="tns:BibliothequeSoapServiceServiceSoapBinding" name="BibliothequeSoapServicePort">
+<soap:address location="http://localhost:8080/BibliothequeWeb/BibliothequeSoapService"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>
