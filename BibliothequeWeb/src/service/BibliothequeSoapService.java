@@ -10,8 +10,6 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
-import org.apache.axis.utils.StringUtils;
-
 import metier.entities.Article;
 import metier.entities.Livre;
 import metier.session.IBibliothequeLocal;
@@ -54,7 +52,7 @@ public class BibliothequeSoapService {
 	
 	@WebMethod
 	public List<Article> consulterParTitre(@WebParam(name = "intitule") String titre) throws Exception {
-		if (StringUtils.isEmpty(titre)) {
+		if (titre == null || "".equals(titre)) {
 			throw new Exception("Le titre de l'article doit etre renseigné");
 		}
 		return metier.consulterArticlesParTitre(titre);

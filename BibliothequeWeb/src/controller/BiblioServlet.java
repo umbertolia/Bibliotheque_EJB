@@ -19,6 +19,7 @@ import org.picketbox.util.StringUtil;
 
 import metier.entities.Article;
 import metier.entities.Livre;
+import metier.entities.Personne;
 import metier.session.IBibliothequeLocal;
 
 
@@ -28,8 +29,15 @@ import metier.session.IBibliothequeLocal;
  *         Cette classe permet de ...
  * 
  */
-@WebServlet(name = "cs", urlPatterns = { "/article" })
+@WebServlet(name = "BiblioServlet", urlPatterns = { BiblioServlet.SERVLET_PATH_ARTICLE,
+		BiblioServlet.SERVLET_PATH_PERSONNE })
 public class BiblioServlet extends HttpServlet {
+
+	public final static String SERVLET_PATH_ARTICLE = "/article";
+
+	public final static String SERVLET_PATH_PERSONNE = "/personne";
+
+	public final static String SERVLET_PATH_EMPRUNT = "/emprunt";
 
 	/**
 	 * 
@@ -40,6 +48,17 @@ public class BiblioServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if (SERVLET_PATH_ARTICLE.equals(request.getServletPath())) {
+			traiterProduits(request, response);
+		} else if (SERVLET_PATH_PERSONNE.equals(request.getServletPath())) {
+			traiterPersonnes(request, response);
+		} else if (SERVLET_PATH_EMPRUNT.equals(request.getServletPath())) {
+			traiterEmrpunt(request, response);
+		}
+		request.getRequestDispatcher("main.jsp").forward(request, response);
+	}
+
+	private void traiterProduits(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			String action = request.getParameter("action");
 			if (action != null) {
@@ -51,8 +70,7 @@ public class BiblioServlet extends HttpServlet {
 						request.setAttribute("reference", ref);
 						Article article = metier.consulterArticle(ref);
 						articles.add(article);
-					}
-					else {
+					} else {
 						String titre = request.getParameter("intitule");
 						request.setAttribute("intitule", titre);
 						articles = metier.consulterArticlesParTitre(titre);
@@ -68,8 +86,33 @@ public class BiblioServlet extends HttpServlet {
 				}
 			}
 		} catch (Exception exception) {
-			request.setAttribute("exception", exception.getMessage());
+			request.setAttribute("articleException", exception.getMessage());
 		}
-		request.getRequestDispatcher("rechercheArticles.jsp").forward(request, response);
+	}
+
+	private void traiterPersonnes(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			String action = request.getParameter("action");
+			if (action != null) {
+				if (action.equals("se_loguer")) {
+					// recherche par id
+					if (!StringUtil.isNullOrEmpty(request.getParameter("id"))) {
+						Long id = Long.parseLong(request.getParameter("id"));
+						request.setAttribute("adherent", metier.recupererPersonne(id));
+					}
+				} else if (action.equals("ajouter")) {
+					// ajout personne
+					Long id = Long.parseLong(request.getParameter("id"));
+					Personne personne = new Personne(id, request.getParameter("nom"), request.getParameter("nom"));
+					metier.ajouterPersonne(personne);
+				}
+			}
+		} catch (Exception exception) {
+			request.setAttribute("personneException", exception.getMessage());
+		}
+	}
+	
+	private void traiterEmrpunt(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub	
 	}
 }

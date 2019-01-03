@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="e35cf80e-07df-43ab-ad54-7860eec03517" activeEnvironment="Default" name="Bibliotheque" resourceRoot="" soapui-version="5.4.0" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="4bba6332-ea37-4d48-ad75-6d0155f57134" wsaVersion="NONE" name="BibliothequeSoapServiceServiceSoapBinding" type="wsdl" bindingName="{http://service/}BibliothequeSoapServiceServiceSoapBinding" soapVersion="1_1" anonymous="optional" definition="file:/C:/Users/Administrator/git/Bibliotheque/BibliothequeWeb/WebContent/wsdl/BibiothequeSoapService.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/C:/Users/Administrator/git/Bibliotheque/BibliothequeWeb/WebContent/wsdl/BibiothequeSoapService.wsdl"><con:part><con:url>file:/C:/Users/Administrator/git/Bibliotheque/BibliothequeWeb/WebContent/wsdl/BibiothequeSoapService.wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="BibliothequeSoapServiceService" targetNamespace="http://service/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://service/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://service/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="ajouterLivre" type="tns:ajouterLivre"/>
+      <xs:element name="ajouterLivreResponse" type="tns:ajouterLivreResponse"/>
+      <xs:element name="consulterParRef" type="tns:consulterParRef"/>
+      <xs:element name="consulterParRefResponse" type="tns:consulterParRefResponse"/>
+      <xs:element name="consulterParTitre" type="tns:consulterParTitre"/>
+      <xs:element name="consulterParTitreResponse" type="tns:consulterParTitreResponse"/>
+      <xs:complexType name="consulterParTitre">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="intitule" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="consulterParTitreResponse">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:article"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType abstract="true" name="article">
+        <xs:sequence>
+          <xs:element name="disponible" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="intitule" type="xs:string"/>
+          <xs:element minOccurs="0" name="reference" type="xs:long"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="consulterParRef">
+        <xs:sequence>
+          <xs:element name="reference" type="xs:long"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="consulterParRefResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:article"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ajouterLivre">
+        <xs:sequence>
+          <xs:element name="reference" type="xs:long"/>
+          <xs:element minOccurs="0" name="intitule" type="xs:string"/>
+          <xs:element minOccurs="0" name="date" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ajouterLivreResponse">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:element name="Exception" type="tns:Exception"/>
+      <xs:complexType name="Exception">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="message" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="ajouterLivreResponse">
+    <wsdl:part element="tns:ajouterLivreResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="consulterParRefResponse">
+    <wsdl:part element="tns:consulterParRefResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="consulterParTitreResponse">
+    <wsdl:part element="tns:consulterParTitreResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ajouterLivre">
+    <wsdl:part element="tns:ajouterLivre" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="consulterParRef">
+    <wsdl:part element="tns:consulterParRef" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="Exception">
+    <wsdl:part element="tns:Exception" name="Exception"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="consulterParTitre">
+    <wsdl:part element="tns:consulterParTitre" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="BibliothequeSoapService">
+    <wsdl:operation name="consulterParTitre">
+      <wsdl:input message="tns:consulterParTitre" name="consulterParTitre"></wsdl:input>
+      <wsdl:output message="tns:consulterParTitreResponse" name="consulterParTitreResponse"></wsdl:output>
+      <wsdl:fault message="tns:Exception" name="Exception"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="consulterParRef">
+      <wsdl:input message="tns:consulterParRef" name="consulterParRef"></wsdl:input>
+      <wsdl:output message="tns:consulterParRefResponse" name="consulterParRefResponse"></wsdl:output>
+      <wsdl:fault message="tns:Exception" name="Exception"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ajouterLivre">
+      <wsdl:input message="tns:ajouterLivre" name="ajouterLivre"></wsdl:input>
+      <wsdl:output message="tns:ajouterLivreResponse" name="ajouterLivreResponse"></wsdl:output>
+      <wsdl:fault message="tns:Exception" name="Exception"></wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BibliothequeSoapServiceServiceSoapBinding" type="tns:BibliothequeSoapService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="consulterParTitre">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="consulterParTitre">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="consulterParTitreResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="consulterParRef">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="consulterParRef">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="consulterParRefResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ajouterLivre">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="ajouterLivre">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ajouterLivreResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BibliothequeSoapServiceService">
+    <wsdl:port binding="tns:BibliothequeSoapServiceServiceSoapBinding" name="BibliothequeSoapServicePort">
+      <soap:address location="http://localhost:8080/BibliothequeWeb/BibliothequeSoapService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/BibliothequeWeb/BibliothequeSoapService</con:endpoint></con:endpoints><con:operation id="c39b1b02-0efa-496c-8f37-a2308ccc282c" isOneWay="false" action="" name="ajouterLivre" bindingOperationName="ajouterLivre" type="Request-Response" outputName="ajouterLivreResponse" inputName="ajouterLivre" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="e2c7ab54-6c8e-4ea1-a14f-0e09c6b9abb0" name="ajouterLivre16"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/BibliothequeWeb/BibliothequeSoapService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <ser:ajouterLivre>\r
+         <reference>16</reference>\r
+         <intitule>Livre SoapUI</intitule>\r
+         <date>27/12/2018</date>\r
+      </ser:ajouterLivre>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://service/BibliothequeSoapService/ajouterLivre"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="d5d43977-438d-4808-93cc-284385533917" isOneWay="false" action="" name="consulterParTitre" bindingOperationName="consulterParTitre" type="Request-Response" outputName="consulterParTitreResponse" inputName="consulterParTitre" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="b5c88bc3-c406-4da7-873e-ce87dcc0746f" name="titresAvecLeChiffre1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/BibliothequeWeb/BibliothequeSoapService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <ser:consulterParTitre>\r
+         <intitule>1</intitule>\r
+      </ser:consulterParTitre>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://service/BibliothequeSoapService/consulterParTitre"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="a73c0171-f373-4f4c-bd90-68a75ccc55af" isOneWay="false" action="" name="consulterParRef" bindingOperationName="consulterParRef" type="Request-Response" outputName="consulterParRefResponse" inputName="consulterParRef" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="69f9a5ea-9bd2-45de-a7c4-ea5533f5a322" name="getLivre16"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/BibliothequeWeb/BibliothequeSoapService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <ser:consulterParRef>\r
+         <reference>16</reference>\r
+      </ser:consulterParRef>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://service/BibliothequeSoapService/consulterParRef"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/></con:soapui-project>
