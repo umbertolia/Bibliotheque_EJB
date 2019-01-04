@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="ejbModule"/>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="org.jboss.ide.eclipse.as.classpath.core.ejb3.classpathContainer/JBoss AS 7.1 at localhost"/>
 	<classpathentry kind="lib" path="C:/Users/Administrator/Downloads/javax.interceptor-api-1.2.jar/javax.interceptor-api-1.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Administrator/Downloads/jboss-logging-3.1.0.ga.jar"/>

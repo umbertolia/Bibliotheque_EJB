@@ -5,7 +5,7 @@
 				<h2>Article</h2>
 				<table>
 					<tr>
-						<td>Référence id : ${id} </td>
+						<td>Référence</td>
 						<td><input type="number" min="1" step="1" name="reference" id="reference" value="${reference}"></td>
 						<td>${errCode}</td> 
 					</tr>

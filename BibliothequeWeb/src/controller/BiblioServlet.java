@@ -30,7 +30,7 @@ import metier.session.IBibliothequeLocal;
  * 
  */
 @WebServlet(name = "BiblioServlet", urlPatterns = { BiblioServlet.SERVLET_PATH_ARTICLE,
-		BiblioServlet.SERVLET_PATH_PERSONNE })
+		BiblioServlet.SERVLET_PATH_PERSONNE, BiblioServlet.SERVLET_PATH_EMPRUNT })
 public class BiblioServlet extends HttpServlet {
 
 	public final static String SERVLET_PATH_ARTICLE = "/article";
@@ -94,25 +94,44 @@ public class BiblioServlet extends HttpServlet {
 		try {
 			String action = request.getParameter("action");
 			if (action != null) {
-				if (action.equals("se_loguer")) {
+				if (action.equals("login")) {
 					// recherche par id
 					if (!StringUtil.isNullOrEmpty(request.getParameter("id"))) {
 						Long id = Long.parseLong(request.getParameter("id"));
-						request.setAttribute("adherent", metier.recupererPersonne(id));
+						// request.setAttribute("adherent",
+						// metier.recupererPersonne(id));
+						Personne personne = metier.recupererPersonne(id);
+						request.getSession().setAttribute("adherent", personne);
 					}
-				} else if (action.equals("ajouter")) {
+				} 
+				else if (action.equals("ajouter")) {
 					// ajout personne
 					Long id = Long.parseLong(request.getParameter("id"));
 					Personne personne = new Personne(id, request.getParameter("nom"), request.getParameter("nom"));
 					metier.ajouterPersonne(personne);
+				}
+				else if (action.equals("logout")) {
+					request.getSession().removeAttribute("adherent");
 				}
 			}
 		} catch (Exception exception) {
 			request.setAttribute("personneException", exception.getMessage());
 		}
 	}
-	
+
 	private void traiterEmrpunt(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub	
+		try {
+			Personne abonne = (Personne) request.getSession().getAttribute("adherent");
+			if (abonne != null) {
+				Long idAbonne = abonne.getId();
+				Long refArticle = Long.parseLong(request.getParameter("reference"));
+				metier.emprunter(refArticle, idAbonne);
+				Personne personne = metier.recupererPersonne(idAbonne);
+				request.getSession().setAttribute("adherent", personne);
+			}
+			
+		} catch (Exception exception) {
+			request.setAttribute("empruntException", exception.getMessage());
+		}
 	}
 }

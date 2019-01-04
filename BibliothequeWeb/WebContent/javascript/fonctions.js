@@ -37,7 +37,7 @@ function validerFormPersonne(elmtAction) {
 	var idElmt = document.getElementById("id");
 	var nomElmt = document.getElementById("nom");
 	var prenomElmt = document.getElementById("prenom");
-	if (elmtAction.value == "se_loguer") {
+	if (elmtAction.value == "login") {
 		idElmt.required = true;
 	}
 	else if (elmtAction.value == "ajouter") {
@@ -61,4 +61,12 @@ function validerFormPersonne(elmtAction) {
 	if (form.checkValidity()) {
 		form.submit();
 	}
+}
+
+function validerFormEmprunt(elmtAction) {
+	var form = document.getElementById("empruntForm");
+	if (form.checkValidity()) {
+		form.submit();
+	}
+
 }

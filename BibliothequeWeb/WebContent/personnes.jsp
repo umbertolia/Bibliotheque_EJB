@@ -19,12 +19,15 @@
 							<td>${errCode}</td>
 						</tr>
 						<tr>
-							<td><input type="submit" name="action" id="action" value="se_loguer" onclick="validerFormPersonne(this)"></td>
+							<td><input type="submit" name="action" id="action" value="login" onclick="validerFormPersonne(this)"></td>
+							<c:if test="${(adherent != null)}">
+								<td><input type="submit" name="action" id="action" value="logout" onclick="validerFormPersonne(this)"></td>
+							</c:if>
 							<td><input type="submit" name="action" id="action" value="ajouter" onclick="validerFormPersonne(this)"></td>
 						</tr>
 					</table>
 				</form>
-				<c:if test="${(adherent!=null)||(mtMsgErr!=null)}">
+				<c:if test="${(adherent != null)||(mtMsgErr != null)}">
 					<p>
 					<div id="personne">
 						<form>

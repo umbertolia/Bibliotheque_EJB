@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import javax.ejb.EJB;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -16,8 +17,11 @@ import metier.session.IBibliothequeRemote;
 
 public class Runner {
 
+	 @EJB(name="Biblio") 
+    private static IBibliothequeRemote beanBiblio;
+	
 	public static void main(String[] args) throws IOException {
-
+		
 		Properties prop = new Properties();
 
 		try {
@@ -48,11 +52,16 @@ public class Runner {
 				}
 			}
 			catch (Exception exception) {
-				System.out.println("Pb avec les services de L'EJB : "+exception.getMessage());
+				
 			}
 			
 		} catch (Exception exception) {
 			exception.printStackTrace();
+			System.out.println("Pb avec les services de L'EJB : "+exception.getMessage());
+			// si l'ejb est deployé dans le ear alors appelle via l'annotation @EJB
+			if (beanBiblio != null) {
+				System.out.println(beanBiblio.consulterInventaire());
+			}
 		}
 
 	}
@@ -65,7 +74,7 @@ public class Runner {
 		final Context context = new InitialContext();
 
 		String ejbRemoteJNDIName = "ejb:" + appName + "/" + moduleEjbName + "/" + distinctName + "!"
-				+ viewClassName;
+				+ viewClassName;	
 		System.out.println(ejbRemoteJNDIName);
 
 		return (IBibliothequeRemote) context.lookup(ejbRemoteJNDIName);
