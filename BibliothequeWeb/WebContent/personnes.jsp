@@ -1,6 +1,9 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<form action="personne" method="get" id="personneForm">
+<table>
+	<tr>
+		<td>
+			<form action="personne" method="get" id="personneForm">
 				<h2>Personne</h2>
 					<table>
 					<tr>
@@ -27,9 +30,13 @@
 						</tr>
 					</table>
 				</form>
-				<c:if test="${(adherent != null)||(mtMsgErr != null)}">
-					<p>
-					<div id="personne">
+		</td>
+	</tr>
+	
+	<c:if test="${(adherent != null)||(mtMsgErr != null)}">
+	<tr>
+		<td>
+			<div id="personne">
 						<form>
 							<div>
 								<h1>Adhérent :</h1>
@@ -49,5 +56,19 @@
 								</table>
 							</div>
 						</form>
-					</div>
-				</c:if>
+			</div>
+		</td>	
+	</tr>
+	</c:if>
+	
+	<c:if test="${personneException!=null}">
+	<tr>
+		<td>
+			<div id="errors">
+				<form>
+					<span class="erreur">${personneException}</span>
+				</form>
+			</div>
+		</td>
+	</c:if>
+</table>

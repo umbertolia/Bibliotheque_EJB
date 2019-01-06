@@ -49,7 +49,7 @@ public class BiblioServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (SERVLET_PATH_ARTICLE.equals(request.getServletPath())) {
-			traiterProduits(request, response);
+			traiterArticles(request, response);
 		} else if (SERVLET_PATH_PERSONNE.equals(request.getServletPath())) {
 			traiterPersonnes(request, response);
 		} else if (SERVLET_PATH_EMPRUNT.equals(request.getServletPath())) {
@@ -58,7 +58,7 @@ public class BiblioServlet extends HttpServlet {
 		request.getRequestDispatcher("main.jsp").forward(request, response);
 	}
 
-	private void traiterProduits(HttpServletRequest request, HttpServletResponse response) {
+	private void traiterArticles(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			String action = request.getParameter("action");
 			if (action != null) {
