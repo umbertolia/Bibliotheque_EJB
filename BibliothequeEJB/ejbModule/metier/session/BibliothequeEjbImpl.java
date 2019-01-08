@@ -16,6 +16,7 @@ import javax.interceptor.Interceptors;
 import org.jboss.logging.Logger;
 
 import interceptor.BibliothequeInterceptor;
+import metier.BibliothequeException;
 import metier.constantes.ActionEnum;
 import metier.entities.Article;
 import metier.entities.Livre;
@@ -49,26 +50,30 @@ public class BibliothequeEjbImpl implements IBibliothequeLocal, IBibliothequeRem
 	@PostConstruct
 	public void initialisation() {
 		// en presence d'un intercepteur, cette init est by-passée
-		ajouterStock(new Livre(123L, "Livre 1", new Date()));
-		ajouterStock(new Livre(456L, "Livre 2", new Date()));
-		ajouterStock(new Livre(789L, "Livre 3", new Date()));
-		log.info("Initialisation Ajout de 3 Livres depuis l'EJB");
+		try {
+			ajouterStock(new Livre(123L, "Livre 1", new Date()), ActionEnum.CREER);
+			ajouterStock(new Livre(456L, "Livre 2", new Date()), ActionEnum.CREER);
+			ajouterStock(new Livre(789L, "Livre 3", new Date()), ActionEnum.CREER);
+			log.info("Initialisation Ajout de 3 Livres depuis l'EJB");
+		}
+		catch (BibliothequeException bibliothequeException) {
+			//TODO ajout dans les logs
+		}
 	}
 
 	@Override
 	@Lock(LockType.READ)
 	public List<Article> consulterInventaire() {
-
 		List<Article> liste = new ArrayList<Article>(stock.getInventaire().values());
 		return liste;
 	}
 
 	@Override
 	@Lock(LockType.READ)
-	public Article consulterArticle(Long reference) {
+	public Article consulterArticle(Long reference) throws BibliothequeException {
 		Article article = stock.getInventaire().get(reference);
 		if (article == null) {
-			throw new RuntimeException("Article introuvable");
+			throw new BibliothequeException("Article introuvable");
 		}
 		return article;
 	}
@@ -88,7 +93,7 @@ public class BibliothequeEjbImpl implements IBibliothequeLocal, IBibliothequeRem
 
 	@Override
 	@Lock(LockType.READ)
-	public List<Article> consulterEmprunts(Long idPersonne) {
+	public List<Article> consulterEmprunts(Long idPersonne) throws BibliothequeException {
 		List<Article> emprunts = new ArrayList<Article>();
 		if(idPersonne != null && personnes != null) {
 			// recup de la personne
@@ -101,55 +106,76 @@ public class BibliothequeEjbImpl implements IBibliothequeLocal, IBibliothequeRem
 	
 	@Override
 	@Lock(LockType.WRITE)
-	public void ajouterPersonne(Personne personne, ActionEnum actionEnum) {
+	public void ajouterPersonne(Personne personne, ActionEnum actionEnum) throws BibliothequeException {
 		if (personne != null) {
 			switch (actionEnum) {
 				case CREER : {
 					if (personnes.containsKey(personne.getId())) {
-						throw new RuntimeException("L'id "+personne.getId() + " existe deja !");
+						throw new BibliothequeException("L'id "+personne.getId() + " existe deja !");
 					}
+					personnes.put(personne.getId(), personne);
 					break;
 				}
 				case MODIFIER : {
 					// verif si la personne est en DB
 					if (!personnes.containsKey(personne.getId())) {
-						throw new RuntimeException("L'id "+personne.getId() + " n'existe pas !"); 
+						throw new BibliothequeException("L'id "+personne.getId() + " n'existe pas !"); 
 					}
+					Personne personneDB = personnes.get(personne.getId());
+					personneDB.setNom(personne.getNom());
+					personneDB.setPrenom(personne.getPrenom());
+					personnes.put(personneDB.getId(), personneDB);
 					break;
 				}
 			}
-			personnes.put(personne.getId(), personne);
 		}
 	}
 	
 	@Override
 	@Lock(LockType.READ)
-	public Personne recupererPersonne(Long idPersonne) {
+	public Personne recupererPersonne(Long idPersonne) throws BibliothequeException {
 		Personne personne = null;
 		if (idPersonne != null && personnes != null) {
 			personne = personnes.get(idPersonne);
 		}
 		if (personne == null) {
-			throw new RuntimeException("Personne introuvable");
+			throw new BibliothequeException("Personne introuvable");
 		}
 		return personne;
 	}
 
 	@Override
 	@Lock(LockType.WRITE)
-	public void ajouterStock(Article article) {
-		if (stock.getInventaire().containsKey(article.getReference())) {
-			throw new RuntimeException("Un article avec l'id "+article.getReference() + " existe deja !");
+	public void ajouterStock(Article article, ActionEnum actionEnum) throws BibliothequeException {
+		if (article != null) {
+			switch (actionEnum) {
+				case CREER : {
+					if (stock.getInventaire().containsKey(article.getReference())) {
+						throw new BibliothequeException(article + " existe deja !");
+					}
+					stock.getInventaire().put(article.getReference(), article);
+					break;
+				}
+				case MODIFIER : {
+					if (!stock.getInventaire().containsKey(article.getReference())) {
+						throw new BibliothequeException(article + " n'existe pas !");
+					}
+					Article articleDB = stock.getInventaire().get(article.getReference());
+					articleDB.setIntitule(article.getIntitule());
+					stock.getInventaire().put(articleDB.getReference(), articleDB);
+					break;
+				}
+			}
 		}
-		stock.getInventaire().put(article.getReference(), article);
+		
 	}
 
 	@Override
 	@Lock(LockType.WRITE)
-	public void emprunter(Long refArticle, Long idPersonne) {
+	public void emprunter(Long refArticle, Long idPersonne) throws BibliothequeException {
 		// emprunt possible ?
 		if (consulterEmprunts(idPersonne).size() >= EMPRUNTS_TAILLE_MAX) {
-			throw new RuntimeException("Emprunt impossible : Vous avez atteint le nombre max d'emprunts");
+			throw new BibliothequeException("Emprunt impossible : Vous avez atteint le nombre max d'emprunts");
 		}
 		// on verifie si le livre existe puis on l'enleve du stock
 		Article article = consulterArticle(refArticle);
@@ -161,24 +187,24 @@ public class BibliothequeEjbImpl implements IBibliothequeLocal, IBibliothequeRem
 
 	@Override
 	@Lock(LockType.WRITE)
-	public void restituer(Article article, Long idPersonne) {
+	public void restituer(Article article, Long idPersonne) throws BibliothequeException {
 		Personne personne = recupererPersonne(idPersonne);
 		
 		Article articleDB = personne.getEmprunts().get(article.getReference());
 		if (articleDB == null) {
-			throw new RuntimeException("Restitution impossible : livre inexistant en base");
+			throw new BibliothequeException("Restitution impossible : livre inexistant en base");
 		}
 		personne.getEmprunts().remove(article.getReference());
 		stock.getInventaire().put(article.getReference(), article);
 	}
 
 	@Override
-	public Personne recupererPersonneIdNomPrenom(Personne personne) {
+	public Personne recupererPersonneIdNomPrenom(Personne personne) throws BibliothequeException {
 		Personne personneDB = null;
 		
 		personneDB = recupererPersonne(personne.getId());
 		if (!personneDB.equals(personne)) {
-			throw new RuntimeException(personne + " inexistante en base");
+			throw new BibliothequeException(personne + " inexistante en base");
 		}
 		return personneDB;
 	}

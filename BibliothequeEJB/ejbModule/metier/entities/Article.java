@@ -78,7 +78,7 @@ public abstract class Article implements Serializable {
 
 	
 	public String toString() {
-		return this.getClass().getSimpleName() + " ["+intitule+"] " + " [ref." + reference + "] " + " dispo : " + getDispo();
+		return this.getClass().getSimpleName() + " " +intitule+ " [ref." + reference + "] " + " dispo : " + getDispo();
 	}
 	
 

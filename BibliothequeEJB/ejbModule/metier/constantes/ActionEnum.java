@@ -1,7 +1,7 @@
 package metier.constantes;
 
 public enum ActionEnum {
-	CREER("ajouter"), MODIFIER("modifier"), LOGIN("login"), LOGOUT("logout");
+	CREER("ajouter"), MODIFIER("modifier"), LOGIN("login"), LOGOUT("logout"), CONSULTER("consulter"), INVENTAIRE("inventaire");
 	
 	String nomAction;
 

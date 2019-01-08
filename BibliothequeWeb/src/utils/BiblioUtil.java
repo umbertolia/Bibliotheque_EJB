@@ -1,5 +1,6 @@
 package utils;
 
+import metier.BibliothequeException;
 import metier.constantes.ActionEnum;
 
 public class BiblioUtil {
@@ -9,7 +10,7 @@ public class BiblioUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static ActionEnum recupActionEnum(String nomAction) throws Exception {
+	public static ActionEnum recupActionEnum(String nomAction) throws BibliothequeException {
 		
 		ActionEnum actionEnum = null;
 			if (!isEmptyOrNull(nomAction)) {
@@ -20,7 +21,7 @@ public class BiblioUtil {
 				}
 			}
 		if (actionEnum == null) {
-			throw new RuntimeException("Action "+nomAction+ " non identifiée");
+			throw new BibliothequeException("Action "+nomAction+ " non identifiée");
 		}
 		return actionEnum;	
 	}

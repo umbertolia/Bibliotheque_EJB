@@ -4,12 +4,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.picketbox.util.StringUtil;
 
+import metier.BibliothequeException;
 import metier.entities.Personne;
 import metier.session.IBibliothequeLocal;
 
 public class PersonneUtils {
 	
-	public static Personne loguerPersonne(HttpServletRequest request, IBibliothequeLocal metier) {
+	public static Personne loguerPersonne(HttpServletRequest request, IBibliothequeLocal metier) throws BibliothequeException {
 		Personne personne = null;
 		// recherche peresonne
 		if (!StringUtil.isNullOrEmpty(request.getParameter("id"))) {
@@ -50,7 +51,7 @@ public class PersonneUtils {
 	 * @param request
 	 * @param personne
 	 */
-	public static void enregistrerPersonneRequest(HttpServletRequest request, Personne personne) {
+	public static void enregistrerPersonneInRequest(HttpServletRequest request, Personne personne) {
 		if (personne != null) {
 			request.setAttribute("id", personne.getId());
 			request.setAttribute("nom", personne.getNom());

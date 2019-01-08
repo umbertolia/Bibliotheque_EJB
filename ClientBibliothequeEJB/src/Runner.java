@@ -9,6 +9,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import metier.constantes.ActionEnum;
 import metier.entities.Article;
 import metier.entities.Livre;
 import metier.entities.Personne;
@@ -38,7 +39,7 @@ public class Runner {
 			}
 
 			// ajout livre
-			stub.ajouterStock(new Livre(1451L, "Le Hobbit", new Date()));
+			stub.ajouterStock(new Livre(1451L, "Le Hobbit", new Date()), ActionEnum.CREER);
 			//
 			Personne abonne = stub.recupererPersonne(1L);
 

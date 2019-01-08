@@ -10,6 +10,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import metier.constantes.ActionEnum;
 import metier.entities.Article;
 import metier.entities.Livre;
 import metier.session.IBibliothequeLocal;
@@ -36,7 +37,7 @@ public class BibliothequeSoapService {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			datePublic = sdf.parse(datePublication);
 			Article article = new Livre(ref, titre, datePublic);
-			metier.ajouterStock(article);
+			metier.ajouterStock(article, ActionEnum.CREER);
 		} catch (ParseException parseException) {
 			throw new Exception("Date incorrecte", parseException);
 		}

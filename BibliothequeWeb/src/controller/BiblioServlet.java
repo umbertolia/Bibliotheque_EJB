@@ -5,7 +5,6 @@ package controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -15,13 +14,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.picketbox.util.StringUtil;
-
+import metier.BibliothequeException;
 import metier.constantes.ActionEnum;
 import metier.entities.Article;
-import metier.entities.Livre;
 import metier.entities.Personne;
 import metier.session.IBibliothequeLocal;
+import utils.ArticleUtil;
 import utils.BiblioUtil;
 import utils.PersonneUtils;
 
@@ -61,35 +59,42 @@ public class BiblioServlet extends HttpServlet {
 		request.getRequestDispatcher("main.jsp").forward(request, response);
 	}
 
+	@SuppressWarnings("serial")
 	private void traiterArticles(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			String action = request.getParameter("action");
-			if (action != null) {
-				if (action.equals("consulter")) {
-					List<Article> articles = new ArrayList<Article>();
-					// recherche par ref
-					if (!StringUtil.isNullOrEmpty(request.getParameter("reference"))) {
-						Long ref = Long.parseLong(request.getParameter("reference"));
-						request.setAttribute("reference", ref);
-						Article article = metier.consulterArticle(ref);
-						articles.add(article);
-					} else {
-						String titre = request.getParameter("intitule");
-						request.setAttribute("intitule", titre);
-						articles = metier.consulterArticlesParTitre(titre);
+			ActionEnum actionEnum = BiblioUtil.recupActionEnum(request.getParameter("action"));
+			List<Article> articles = new ArrayList<Article>();
+			Article article = null;
+			switch (actionEnum) {
+				case CONSULTER : {
+					articles = ArticleUtil.recupererArticles(request, metier);
+					if (!articles.isEmpty()) {
+						ArticleUtil.enregistrerArticleInRequest(request, articles.get(0));
 					}
-					request.setAttribute("articles", articles);
-				} else if (action.equals("inventaire")) {
+					break;
+				}
+				case INVENTAIRE : {
 					List<Article> inventaire = metier.consulterInventaire();
 					request.setAttribute("inventaire", inventaire);
-				} else if (action.equals("ajouter")) {
-					Long ref = Long.parseLong(request.getParameter("reference"));
-					String titre = request.getParameter("intitule");
-					metier.ajouterStock(new Livre(ref, titre, new Date()));
+					break;
+				}
+				case CREER : {
+					metier.ajouterStock(article = ArticleUtil.instancierArticle(request), ActionEnum.CREER);
+					List<Article> inventaire = metier.consulterInventaire();
+					request.setAttribute("inventaire", inventaire);
+					break;
+				}
+				case MODIFIER : {
+					article = ArticleUtil.instancierArticle(request);
+					metier.ajouterStock(article, ActionEnum.MODIFIER);
+					articles.add(metier.consulterArticle(article.getReference()));
+					break;
 				}
 			}
-		} catch (Exception exception) {
-			request.setAttribute("articleException", exception.getMessage());
+			request.setAttribute("articles", articles);
+			ArticleUtil.enregistrerArticleInRequest(request, article);
+		} catch (BibliothequeException bibliothequeException) {
+			request.setAttribute("articleException", bibliothequeException.getMessage());
 		}
 	}
 
@@ -121,7 +126,7 @@ public class BiblioServlet extends HttpServlet {
 					break;
 				}
 			}
-			PersonneUtils.enregistrerPersonneRequest(request, personne);
+			PersonneUtils.enregistrerPersonneInRequest(request, personne);
 	
 		} catch (Exception exception) {
 			request.setAttribute("personneException", exception.getMessage());

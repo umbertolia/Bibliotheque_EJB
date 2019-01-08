@@ -9,6 +9,7 @@ import javax.interceptor.InvocationContext;
 
 import org.jboss.logging.Logger;
 
+import metier.BibliothequeException;
 import metier.constantes.ActionEnum;
 import metier.entities.Livre;
 import metier.entities.Personne;
@@ -21,24 +22,28 @@ public class BibliothequeInterceptor {
 	@PostConstruct
 	public void initialisation(InvocationContext invocationContext) {
 		IBibliothequeLocal metier = (IBibliothequeLocal) invocationContext.getTarget();
-		metier.ajouterStock(new Livre(1L, "Livre 111", new Date()));
-		metier.ajouterStock(new Livre(2L, "Livre 222", new Date()));
-		metier.ajouterStock(new Livre(3L, "Livre 333", new Date()));
-		metier.ajouterStock(new Livre(4L, "Livre 444", new Date()));
-		metier.ajouterStock(new Livre(5L, "Livre 555", new Date()));
-		metier.ajouterStock(new Livre(6L, "Livre 666", new Date()));
-		metier.ajouterStock(new Livre(7L, "Livre 777", new Date()));
-		metier.ajouterStock(new Livre(8L, "Livre 888", new Date()));
-		metier.ajouterStock(new Livre(9L, "Livre 999", new Date()));
-		metier.ajouterStock(new Livre(10L, "Livre 1010", new Date()));
-		metier.ajouterStock(new Livre(11L, "Livre 1111", new Date()));
-		metier.ajouterStock(new Livre(12L, "Livre 1212", new Date()));
-		metier.ajouterStock(new Livre(13L, "Livre 1313", new Date()));
-		metier.ajouterStock(new Livre(14L, "Livre 1414", new Date()));
-		metier.ajouterStock(new Livre(15L, "Livre 1515", new Date()));
-		log.info("Initialisation Ajout d'articles depuis l'incercepteur");
-		
-		metier.ajouterPersonne(new Personne(1l, "Jules", "Vernes"), ActionEnum.CREER);
+		try {
+			metier.ajouterStock(new Livre(1L, "Livre 111", new Date()), ActionEnum.CREER);
+			metier.ajouterStock(new Livre(2L, "Livre 222", new Date()), ActionEnum.CREER);
+			metier.ajouterStock(new Livre(3L, "Livre 333", new Date()), ActionEnum.CREER);
+			metier.ajouterStock(new Livre(4L, "Livre 444", new Date()), ActionEnum.CREER);
+			metier.ajouterStock(new Livre(5L, "Livre 555", new Date()), ActionEnum.CREER);
+			metier.ajouterStock(new Livre(6L, "Livre 666", new Date()), ActionEnum.CREER);
+			metier.ajouterStock(new Livre(7L, "Livre 777", new Date()), ActionEnum.CREER);
+			metier.ajouterStock(new Livre(8L, "Livre 888", new Date()), ActionEnum.CREER);
+			metier.ajouterStock(new Livre(9L, "Livre 999", new Date()), ActionEnum.CREER);
+			metier.ajouterStock(new Livre(10L, "Livre 1010", new Date()), ActionEnum.CREER);
+			metier.ajouterStock(new Livre(11L, "Livre 1111", new Date()), ActionEnum.CREER);
+			metier.ajouterStock(new Livre(12L, "Livre 1212", new Date()), ActionEnum.CREER);
+			metier.ajouterStock(new Livre(13L, "Livre 1313", new Date()), ActionEnum.CREER);
+			metier.ajouterStock(new Livre(14L, "Livre 1414", new Date()), ActionEnum.CREER);
+			metier.ajouterStock(new Livre(15L, "Livre 1515", new Date()), ActionEnum.CREER);
+			log.info("Initialisation Ajout d'articles depuis l'incercepteur");
+			metier.ajouterPersonne(new Personne(1l, "Jules", "Vernes"), ActionEnum.CREER);
+		}
+		catch (BibliothequeException bibliothequeException) {
+			// TODO ajout dans les logs
+		}
 	}
 
 	@PreDestroy

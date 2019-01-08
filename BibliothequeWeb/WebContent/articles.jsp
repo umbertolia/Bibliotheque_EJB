@@ -9,17 +9,22 @@
 						<table>
 							<tr>
 								<td>Référence</td>
-								<td><input type="number" min="1" step="1" name="reference" id="reference" value="${reference}"></td>
+								<td><input type="text" name="reference" id="reference" value="${reference}" oninput="setCustomValidity('')"></td>
 								<td>${errCode}</td> 
 							</tr>
 							<tr>
 								<td>Intitule</td>
-								<td><input type="text"  name="intitule" id="intitule" value="${intitule}"></td>
+								<td><input type="text"  name="intitule" id="intitule" value="${intitule}" oninput="setCustomValidity('')"></td>
 								<td>${errCode}</td>
 							</tr>
 							<tr>
-								<td><input type="submit" name="action" id="action" value="ajouter" onclick="validerFormArticle(this)"></td>
 								<td><input type="submit" name="action" id="action" value="consulter" onclick="validerFormArticle(this)"></td>
+								<td><input type="submit" name="action" id="action" value="ajouter" onclick="validerFormArticle(this)"></td>
+								<c:if test="${(reference != null && intitule != null)}" >
+								<td>
+									<input type="submit" name="action" id="action" value="modifier"  onclick="validerFormArticle(this)">
+								</td>
+								</c:if>
 								<td><input type="submit" name="action" id="action" value="inventaire"></td>
 							</tr>
 						</table>
