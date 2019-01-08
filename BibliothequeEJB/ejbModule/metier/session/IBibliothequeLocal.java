@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.Local;
 
+import metier.constantes.ActionEnum;
 import metier.entities.Article;
 import metier.entities.Personne;
 
@@ -19,7 +20,7 @@ public interface IBibliothequeLocal {
 	
 	public void ajouterStock(Article article);
 	
-	public void ajouterPersonne(Personne personne);
+	public void ajouterPersonne(Personne personne, ActionEnum typeAction);
 	
 	public List<Article> consulterInventaire();
 
@@ -30,6 +31,8 @@ public interface IBibliothequeLocal {
 	public List<Article> consulterEmprunts(Long idPersonne);
 
 	public Personne recupererPersonne(Long idPersonne);
+	
+	public Personne recupererPersonneIdNomPrenom(Personne personne);
 	
 	public void emprunter(Long refArticle, Long idPersonne);
 	

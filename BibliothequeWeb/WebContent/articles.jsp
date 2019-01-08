@@ -18,8 +18,8 @@
 								<td>${errCode}</td>
 							</tr>
 							<tr>
-								<td><input type="submit" name="action" id="action" value="ajouter" onclick="validerForm(this)"></td>
-								<td><input type="submit" name="action" id="action" value="consulter" onclick="validerForm(this)"></td>
+								<td><input type="submit" name="action" id="action" value="ajouter" onclick="validerFormArticle(this)"></td>
+								<td><input type="submit" name="action" id="action" value="consulter" onclick="validerFormArticle(this)"></td>
 								<td><input type="submit" name="action" id="action" value="inventaire"></td>
 							</tr>
 						</table>

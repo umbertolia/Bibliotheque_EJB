@@ -17,10 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.picketbox.util.StringUtil;
 
+import metier.constantes.ActionEnum;
 import metier.entities.Article;
 import metier.entities.Livre;
 import metier.entities.Personne;
 import metier.session.IBibliothequeLocal;
+import utils.BiblioUtil;
+import utils.PersonneUtils;
 
 
 /**
@@ -90,32 +93,40 @@ public class BiblioServlet extends HttpServlet {
 		}
 	}
 
+	/**
+	 * @param request
+	 * @param response
+	 */
 	private void traiterPersonnes(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			String action = request.getParameter("action");
-			if (action != null) {
-				if (action.equals("login")) {
-					// recherche par id
-					if (!StringUtil.isNullOrEmpty(request.getParameter("id"))) {
-						Long id = Long.parseLong(request.getParameter("id"));
-						// request.setAttribute("adherent",
-						// metier.recupererPersonne(id));
-						Personne personne = metier.recupererPersonne(id);
-						request.getSession().setAttribute("adherent", personne);
-					}
-				} 
-				else if (action.equals("ajouter")) {
-					// ajout personne
-					Long id = Long.parseLong(request.getParameter("id"));
-					Personne personne = new Personne(id, request.getParameter("nom"), request.getParameter("nom"));
-					metier.ajouterPersonne(personne);
+			ActionEnum actionEnum = BiblioUtil.recupActionEnum(request.getParameter("action"));
+			Personne personne = null;
+			switch (actionEnum) {
+				case LOGIN : {
+					personne = PersonneUtils.loguerPersonne(request, metier);
+					request.getSession().setAttribute("adherent", personne);
+					break;
 				}
-				else if (action.equals("logout")) {
+				case CREER : {
+					metier.ajouterPersonne(personne = PersonneUtils.creerPersonne(request), ActionEnum.CREER);
+					break;
+					} 
+				case MODIFIER : {
+					metier.ajouterPersonne(personne = PersonneUtils.creerPersonne(request), ActionEnum.MODIFIER);
+					request.getSession().setAttribute("adherent", personne);
+					break;
+				}
+				case LOGOUT : {
 					request.getSession().removeAttribute("adherent");
+					break;
 				}
 			}
+			PersonneUtils.enregistrerPersonneRequest(request, personne);
+	
 		} catch (Exception exception) {
 			request.setAttribute("personneException", exception.getMessage());
+			request.setAttribute("nom", request.getParameter("nom"));
+			request.setAttribute("prenom", request.getParameter("prenom"));
 		}
 	}
 

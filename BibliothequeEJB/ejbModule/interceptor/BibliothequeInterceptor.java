@@ -9,6 +9,7 @@ import javax.interceptor.InvocationContext;
 
 import org.jboss.logging.Logger;
 
+import metier.constantes.ActionEnum;
 import metier.entities.Livre;
 import metier.entities.Personne;
 import metier.session.IBibliothequeLocal;
@@ -37,7 +38,7 @@ public class BibliothequeInterceptor {
 		metier.ajouterStock(new Livre(15L, "Livre 1515", new Date()));
 		log.info("Initialisation Ajout d'articles depuis l'incercepteur");
 		
-		metier.ajouterPersonne(new Personne(1l, "Jules", "Vernes"));
+		metier.ajouterPersonne(new Personne(1l, "Jules", "Vernes"), ActionEnum.CREER);
 	}
 
 	@PreDestroy

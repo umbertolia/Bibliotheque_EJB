@@ -7,20 +7,22 @@
 				<h2>Emprunt</h2>
 				<table>
 					<tr>
-						<td>Id Adhérent</td>
-						<td><input type="text" readonly="readonly" min="1" step="1"
-							name="id" id="id" value="${adherent.id}"></td>
-						<td>${errCode}</td>
+						<td>
+							<label for="id">Id Adhérent</label>
+						<input type="email" 
+							name="id" id="id" value="${adherent.id}" required="required">
+						</td>
 					</tr>
 					<tr>
-						<td>Réf. Article</td>
-						<td><input type="number" min="1" step="1" name="reference"
-							id="reference" value="${reference}"></td>
-						<td>${errCode}</td>
+						<td></td>
+						<td>
+							<label for="reference">Réf. Article</label>
+							<input type="number" min="1"  step="1" name="reference"
+							id="reference" value="${reference}" required="required">
+						</td>
 					</tr>
 					<tr>
-						<td><input type="submit" name="action" id="action"
-							value="emprunter" onclick="validerFormEmprunt(this)"></td>
+						<td><button>Emprunter</button></td>
 					</tr>
 				</table>
 			</form>

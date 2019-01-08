@@ -16,6 +16,7 @@ import javax.interceptor.Interceptors;
 import org.jboss.logging.Logger;
 
 import interceptor.BibliothequeInterceptor;
+import metier.constantes.ActionEnum;
 import metier.entities.Article;
 import metier.entities.Livre;
 import metier.entities.Personne;
@@ -100,8 +101,23 @@ public class BibliothequeEjbImpl implements IBibliothequeLocal, IBibliothequeRem
 	
 	@Override
 	@Lock(LockType.WRITE)
-	public void ajouterPersonne(Personne personne) {
+	public void ajouterPersonne(Personne personne, ActionEnum actionEnum) {
 		if (personne != null) {
+			switch (actionEnum) {
+				case CREER : {
+					if (personnes.containsKey(personne.getId())) {
+						throw new RuntimeException("L'id "+personne.getId() + " existe deja !");
+					}
+					break;
+				}
+				case MODIFIER : {
+					// verif si la personne est en DB
+					if (!personnes.containsKey(personne.getId())) {
+						throw new RuntimeException("L'id "+personne.getId() + " n'existe pas !"); 
+					}
+					break;
+				}
+			}
 			personnes.put(personne.getId(), personne);
 		}
 	}
@@ -155,7 +171,15 @@ public class BibliothequeEjbImpl implements IBibliothequeLocal, IBibliothequeRem
 		personne.getEmprunts().remove(article.getReference());
 		stock.getInventaire().put(article.getReference(), article);
 	}
-	
 
-	
+	@Override
+	public Personne recupererPersonneIdNomPrenom(Personne personne) {
+		Personne personneDB = null;
+		
+		personneDB = recupererPersonne(personne.getId());
+		if (!personneDB.equals(personne)) {
+			throw new RuntimeException(personne + " inexistante en base");
+		}
+		return personneDB;
+	}
 }
