@@ -42,10 +42,7 @@ public class Livre extends Article {
 		return "N/A";
 	}
 
-	public String toString() {
-		return super.toString() + " Publié le "+ getDatePublicationParsee();
 
-	}
 
 	
 }

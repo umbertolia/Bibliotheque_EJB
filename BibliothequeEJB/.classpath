@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="ejbModule"/>
 	<classpathentry kind="con" path="org.jboss.ide.eclipse.as.classpath.core.ejb3.classpathContainer/JBoss AS 7.1 at localhost"/>
-	<classpathentry kind="lib" path="C:/Users/Administrator/Downloads/javax.interceptor-api-1.2.jar/javax.interceptor-api-1.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Administrator/Downloads/jboss-logging-3.1.0.ga.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.jboss.ide.eclipse.as.core.server.runtime.runtimeTarget/JBoss 7.1 Runtime">
 		<attributes>
@@ -14,5 +13,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Administrator/Downloads/javax.interceptor-api-1.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

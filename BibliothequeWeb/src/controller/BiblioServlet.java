@@ -1,6 +1,3 @@
-/**
- * 
- */
 package controller;
 
 import java.io.IOException;
@@ -31,7 +28,7 @@ import utils.PersonneUtils;
  * 
  */
 @WebServlet(name = "BiblioServlet", urlPatterns = { BiblioServlet.SERVLET_PATH_ARTICLE,
-		BiblioServlet.SERVLET_PATH_PERSONNE, BiblioServlet.SERVLET_PATH_EMPRUNT })
+		BiblioServlet.SERVLET_PATH_PERSONNE, BiblioServlet.SERVLET_PATH_EMPRUNT, BiblioServlet.SERVLET_PATH_DEFAULT })
 public class BiblioServlet extends HttpServlet {
 
 	public final static String SERVLET_PATH_ARTICLE = "/article";
@@ -39,6 +36,9 @@ public class BiblioServlet extends HttpServlet {
 	public final static String SERVLET_PATH_PERSONNE = "/personne";
 
 	public final static String SERVLET_PATH_EMPRUNT = "/emprunt";
+	
+	public final static String SERVLET_PATH_DEFAULT = "";
+
 
 	/**
 	 * 
@@ -48,7 +48,7 @@ public class BiblioServlet extends HttpServlet {
 	private IBibliothequeLocal metier;
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (SERVLET_PATH_ARTICLE.equals(request.getServletPath())) {
 			traiterArticles(request, response);
 		} else if (SERVLET_PATH_PERSONNE.equals(request.getServletPath())) {
@@ -59,7 +59,6 @@ public class BiblioServlet extends HttpServlet {
 		request.getRequestDispatcher("main.jsp").forward(request, response);
 	}
 
-	@SuppressWarnings("serial")
 	private void traiterArticles(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			ActionEnum actionEnum = BiblioUtil.recupActionEnum(request.getParameter("action"));
@@ -76,6 +75,7 @@ public class BiblioServlet extends HttpServlet {
 				case INVENTAIRE : {
 					List<Article> inventaire = metier.consulterInventaire();
 					request.setAttribute("inventaire", inventaire);
+					articles = null;
 					break;
 				}
 				case CREER : {
@@ -88,6 +88,10 @@ public class BiblioServlet extends HttpServlet {
 					article = ArticleUtil.instancierArticle(request);
 					metier.ajouterStock(article, ActionEnum.MODIFIER);
 					articles.add(metier.consulterArticle(article.getReference()));
+					break;
+				}
+				default: {
+					// on ne fait rien
 					break;
 				}
 			}
@@ -125,6 +129,14 @@ public class BiblioServlet extends HttpServlet {
 					request.getSession().removeAttribute("adherent");
 					break;
 				}
+				case ABONNES : {
+					request.setAttribute("adherents", metier.recupererPersonnes());
+					break;
+				}
+				default : {
+					// one ne fait rien
+					break;
+				}
 			}
 			PersonneUtils.enregistrerPersonneInRequest(request, personne);
 	
@@ -135,19 +147,33 @@ public class BiblioServlet extends HttpServlet {
 		}
 	}
 
+
+
 	private void traiterEmrpunt(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			Personne abonne = (Personne) request.getSession().getAttribute("adherent");
 			if (abonne != null) {
 				Long idAbonne = abonne.getId();
 				Long refArticle = Long.parseLong(request.getParameter("reference"));
-				metier.emprunter(refArticle, idAbonne);
-				Personne personne = metier.recupererPersonne(idAbonne);
-				request.getSession().setAttribute("adherent", personne);
+				ActionEnum actionEnum = BiblioUtil.recupActionEnum(request.getParameter("action"));
+				switch (actionEnum) {
+					case EMPRUNTER : {
+						metier.emprunter(refArticle, idAbonne);
+						break;
+					}
+					case RESTITUER : {
+						metier.restituer(refArticle, idAbonne);
+						break;
+					}
+				}
 			}
-			
 		} catch (Exception exception) {
 			request.setAttribute("empruntException", exception.getMessage());
 		}
+	}
+	
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getRequestDispatcher("test.html").forward(request, response);
 	}
 }

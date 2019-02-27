@@ -1,4 +1,6 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="WEB-INF/tld/mytags.tld" prefix="mytag"%>
+<%@page import="metier.constantes.ActionEnum" %>
 
 <table>
 	<tr>
@@ -7,22 +9,14 @@
 				<h2>Emprunt</h2>
 				<table>
 					<tr>
-						<td>
-							<label for="id">Id Adhérent</label>
-						<input type="email" 
-							name="id" id="id" value="${adherent.id}" required="required">
-						</td>
+						<td>Adhérent ${adherent.prenom} ${adherent.nom} </td>
 					</tr>
 					<tr>
-						<td></td>
-						<td>
-							<label for="reference">Réf. Article</label>
-							<input type="number" min="1"  step="1" name="reference"
-							id="reference" value="${reference}" required="required">
-						</td>
+						<td>Réf. Article</td>
+						<td><input type="text" name="reference" id="reference" oninput="setCustomValidity('')"></td>
 					</tr>
 					<tr>
-						<td><button>Emprunter</button></td>
+						<td><input type="submit" name="action" id="action" value=<mytag:action actionEnum="<%=ActionEnum.EMPRUNTER %>"/> onclick="validerFormEmprunt('<mytag:action actionEnum="<%=ActionEnum.EMPRUNTER %>"/>')"></td>
 					</tr>
 				</table>
 			</form>
@@ -43,6 +37,7 @@
 									<th>INTITULE</th>
 									<th>DISPONIBILITE</th>
 									<th>DATE DE PUBLICATION</th>
+									<th></th>
 								</tr>
 							</thead>
 							<c:forEach items="${adherent.emprunts}" var="emprunt">
@@ -51,6 +46,14 @@
 									<td>${emprunt.value.intitule}</td>
 									<td>${emprunt.value.dispo}</td>
 									<td>${emprunt.value.datePublicationParsee}</td>
+									<td>
+										
+										<c:url value = "/emprunt" var = "empruntURL">
+   										<c:param name = "reference" value = "${emprunt.value.reference}"/>
+   										<c:param name = "action" value = "restituer"/>
+										</c:url>
+										<a href="${empruntURL}"><img alt="restituer" src=" img/restituer.jpg" onclick=""></a>
+									</td>
 								</tr>
 							</c:forEach>
 						</table>

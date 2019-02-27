@@ -1,4 +1,6 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="WEB-INF/tld/mytags.tld" prefix="mytag"%>
+<%@page import="metier.constantes.ActionEnum" %>
 
 <table>
 	<tr>
@@ -10,22 +12,20 @@
 							<tr>
 								<td>Référence</td>
 								<td><input type="text" name="reference" id="reference" value="${reference}" oninput="setCustomValidity('')"></td>
-								<td>${errCode}</td> 
 							</tr>
 							<tr>
 								<td>Intitule</td>
 								<td><input type="text"  name="intitule" id="intitule" value="${intitule}" oninput="setCustomValidity('')"></td>
-								<td>${errCode}</td>
 							</tr>
 							<tr>
-								<td><input type="submit" name="action" id="action" value="consulter" onclick="validerFormArticle(this)"></td>
-								<td><input type="submit" name="action" id="action" value="ajouter" onclick="validerFormArticle(this)"></td>
+								<td><input type="submit" name="action" id="action" value=<mytag:action actionEnum="<%=ActionEnum.CONSULTER %>"/> onclick="validerFormArticle('<mytag:action actionEnum="<%=ActionEnum.CONSULTER %>"/>')"></td>
+								<td><input type="submit" name="action" id="action" value=<mytag:action actionEnum="<%=ActionEnum.CREER %>"/> onclick="validerFormArticle('<mytag:action actionEnum="<%=ActionEnum.CREER %>"/>')"></td>
 								<c:if test="${(reference != null && intitule != null)}" >
 								<td>
-									<input type="submit" name="action" id="action" value="modifier"  onclick="validerFormArticle(this)">
+									<input type="submit" name="action" id="action" value=<mytag:action actionEnum="<%=ActionEnum.MODIFIER %>"/>  onclick="validerFormArticle('<mytag:action actionEnum="<%=ActionEnum.MODIFIER %>"/>')">
 								</td>
 								</c:if>
-								<td><input type="submit" name="action" id="action" value="inventaire"></td>
+								<td><input type="submit" name="action" id="action" value=<mytag:action actionEnum="<%=ActionEnum.INVENTAIRE %>"/> onclick="disableFormValidationAndSubmit('articleForm')" ></td>
 							</tr>
 						</table>
 			</form>	
@@ -38,7 +38,7 @@
 			<div id="articles">
 				<form>
 					<div>
-						<h1>Articles :</h1>
+						<h1>Liste des Articles</h1>
 						<table class="table-style-two">
 							<thead>
 								<tr>

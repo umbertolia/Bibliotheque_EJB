@@ -1,19 +1,17 @@
-function loadEvents(idAdherent) {
-	if (idAdherent != null) {
-		var idElmt = document.getElementById("id");
-		if (idElmt != null) {
-			//idElmt.readOnly = true;			
-		}
-	}
+function loadEvents() {
+
 }
 
 
-function validerFormPersonne(elmtAction) {
+/**
+ * validation du formulaire Personne
+ */
+function validerFormPersonne(action) {
 	var idElmt = document.getElementById("id");
 	var nomElmt = document.getElementById("nom");
 	var prenomElmt = document.getElementById("prenom");
 	idElmt.required = true;
-	if (elmtAction.value == "ajouter" || elmtAction.value == "modifier") {
+	if (action == "ajouter" || action == "modifier") {
 		nomElmt.required = true;
 		prenomElmt.required = true;
 	}
@@ -23,14 +21,17 @@ function validerFormPersonne(elmtAction) {
 	elementMustHaveStringValue(prenomElmt);
 }
 
-function validerFormArticle(elmtAction) {
+/**
+ * validation du formulaire Article
+ */
+function validerFormArticle(action) {
 	var idElmt = document.getElementById("reference");
 	var intituleElmt = document.getElementById("intitule");
 	
 	idElmt.required = true;
 	intituleElmt.required = true;
 	
-	if (elmtAction.value == "consulter") {
+	if (action == "consulter") {
 		if (intituleElmt.value == "") {
 			idElmt.required = true;
 			intituleElmt.required = false;
@@ -45,6 +46,22 @@ function validerFormArticle(elmtAction) {
 	elementMustHaveStringValue(intituleElmt);
 }
 
+/**
+ * validation du formulaire Emprunt
+ */
+function validerFormEmprunt(action) {
+	var idElmt = document.getElementById("reference");
+	
+	idElmt.required = true;
+	// controles de surface
+	elementMustHaveIntegerValue(idElmt);
+}
+
+
+/***************************************************************************
+ * CONTROLES DE SURFACE
+ */
+/**************************************************************************/
 
 function elementMustHaveIntegerValue(element) {
 	if (element != null && element.required) {
@@ -72,5 +89,13 @@ function elementMustHaveStringValue(element) {
 		else if (element.required && element.validity.patternMismatch) {
 			element.setCustomValidity(element + " doit être un texte");
 		}
+	}
+}
+
+function disableFormValidationAndSubmit(formName) {
+	var elmt =  document.getElementById(formName);
+	if (elmt != null) {
+		elmt.noValidate = true;
+		elmt.submit();
 	}
 }

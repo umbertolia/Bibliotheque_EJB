@@ -23,20 +23,22 @@ public interface IBibliothequeRemote {
 	
 	public void ajouterPersonne(Personne personne, ActionEnum typeAction) throws BibliothequeException;
 	
-	public List<Article> consulterInventaire();
+	public List<Article> consulterInventaire() throws BibliothequeException;
 
 	public Article consulterArticle(Long reference) throws BibliothequeException;
 	
-	public List<Article> consulterArticlesParTitre(String titre);
+	public List<Article> consulterArticlesParTitre(String titre)  throws BibliothequeException;;
 	
 	public List<Article> consulterEmprunts(Long idPersonne) throws BibliothequeException;
 
 	public Personne recupererPersonne(Long idPersonne) throws BibliothequeException;
 	
+	public List<Personne> recupererPersonnes()  throws BibliothequeException;;
+	
 	public Personne recupererPersonneIdNomPrenom(Personne personne) throws BibliothequeException;
 	
 	public void emprunter(Long refArticle, Long idPersonne) throws BibliothequeException;
 	
-	public void restituer(Article article, Long idPersonne) throws BibliothequeException;
+	public void restituer(Long refArticle, Long idPersonne) throws BibliothequeException;
 
 }
