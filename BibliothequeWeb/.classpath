@@ -8,7 +8,6 @@
 			<attribute name="owner.project.facets" value="jst.web"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/BibliothequeEJB"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_80">
 		<attributes>
@@ -16,9 +15,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="C:/Users/Administrator/Downloads/mockito-core-2.15.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Administrator/Downloads/byte-buddy-1.7.9.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Administrator/Downloads/byte-buddy-agent-1.7.9.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Administrator/Downloads/objenesis-2.6.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

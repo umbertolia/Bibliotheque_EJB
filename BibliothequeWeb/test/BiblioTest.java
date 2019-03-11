@@ -1,51 +1,30 @@
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Properties;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.log4j.Appender;
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 
-import controller.BiblioServlet;
 import junit.framework.TestCase;
 import metier.constantes.Property;
+import metier.session.BibliothequeEjbImpl;
 import utils.BiblioUtil;
 
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BiblioTest extends TestCase {
 
-	@Spy
-	private BiblioServlet biblioServlet;
+	private static Logger logger = Logger.getLogger(BiblioTest.class);
 
-	@Mock
-	private HttpServletRequest request;
-
-	@Mock
-	private HttpServletResponse response;
-
-	@Mock
-	private ServletConfig servletConfig;
-
-	@Mock
-	private ServletOutputStream outputStream;
 
 	@Before
 	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
 	}
 
 	@Test
@@ -94,39 +73,26 @@ public class BiblioTest extends TestCase {
 		BiblioUtil.parcoursEnum(Property.class);
 
 	}
-
+	
 	@Test
-	public void test4_TestServlet() {
-		System.out.println("\test4_TestServlet");
+	public void test4_TestConfLog4J() {
+		System.out.println("\ntest4_TestConfLog4J");
 		System.out.println("----------------------");
-		try {
-			/*
-			 * when(biblioServlet.getServletConfig()).thenReturn(servletConfig);
-			 * when(response.getOutputStream()).thenReturn(outputStream);
-			 * when(request.getParameter("user")).thenReturn("admin");
-			 * when(request.getParameter("password")).thenReturn("pwd"); //
-			 * StringWriter sw = new StringWriter(); PrintWriter pw = new
-			 * PrintWriter(sw); when(response.getWriter()).thenReturn(pw);
-			 * 
-			 * biblioServlet = new BiblioServlet(); biblioServlet.doPost(request,
-			 * response); String result = sw.getBuffer().toString().trim();
-			 * assertTrue(sw.toString().contains("adminfezs"));
-			 * assertEquals(result, new String("Full Name: Vinod Kashyap"));
-			 */
+		Logger rootLogger = Logger.getRootLogger();
+		if (rootLogger == null)
+			System.out.println("Root Logger non configuré !");
+		else {
+			System.out.println("Root Logger configuré !");
+			Enumeration<?> appenders = rootLogger.getAllAppenders();
+			assertTrue(appenders.hasMoreElements());
+			while (appenders.hasMoreElements()) {
+				String appenderName = ((Appender) appenders.nextElement()).getName();
+				System.out.println("Nom de l'appender : "+appenderName);
+			}
 
-			when(biblioServlet.getServletConfig()).thenReturn(servletConfig);
-			when(response.getOutputStream()).thenReturn(outputStream);
-			biblioServlet.doPost(request, response);
-			verify(outputStream).println("Hello World!");
-		} catch (ServletException servletException) {
-			System.out.println("Pb avec le doGet() de test4_TestServlet");
-		} catch (IOException ioException) {
-			System.out.println("Pb avec test4_TestServlet");
-		} catch (Exception exception) {
-			System.out.println("Pb avec test4_TestServlet");
 		}
-	}
 
+	}
 	
 
 }

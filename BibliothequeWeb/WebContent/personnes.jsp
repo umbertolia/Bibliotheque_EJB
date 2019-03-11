@@ -87,8 +87,8 @@
 		<td>
 			<div id="adherents">
 				<form>
+				<h2>List des Adherents</h2>
 					<table class="table-style-two">
-					<h2>List des Adherents</h2>
 						<thead>
 							<tr>
 								<th>ID</th>

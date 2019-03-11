@@ -165,6 +165,9 @@ public class BiblioServlet extends HttpServlet {
 						metier.restituer(refArticle, idAbonne);
 						break;
 					}
+					default : {
+						break;
+					}
 				}
 			}
 		} catch (Exception exception) {

@@ -7,16 +7,44 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.apache.log4j.Logger;
+
 import metier.BibliothequeException;
 import metier.PropertytEnumAvecFils;
 import metier.constantes.ActionEnum;
+import metier.constantes.DaoEnum;
 
 
 public class BiblioUtil {
 
+	private static Logger logger = Logger.getLogger(BiblioUtil.class);
+	
 	private static Properties props = null;
 
 	private static final String CONTEXT_PARAM_PROPERTY_FILENAME = "propertiesFileName";
+	
+	private static final String PROPERTY_FILENAME = "conf.properties";
+	
+	
+	public static DaoEnum getDaoEnum() {
+		
+		DaoEnum daoEnum = null;
+		Properties prop = new Properties();
+		try {
+			prop.load(BiblioUtil.class.getClassLoader().getResourceAsStream("conf.properties"));
+			String typeDaoFromProps = (String) prop.get("databaseType");
+			for (DaoEnum enumer : DaoEnum.values()) {
+				if (enumer.getDaoType().equalsIgnoreCase(typeDaoFromProps)) {
+					daoEnum = enumer;
+				}
+			}
+		} catch (IOException e) {
+			logger.debug("Impossible de lire le fichier "+PROPERTY_FILENAME);
+			logger.debug("Mode DEV -> Le dao sera basé sur les maps");
+		}
+		
+		return daoEnum;
+	}
 
 	/**
 	 * @param nomAction
@@ -95,4 +123,5 @@ public class BiblioUtil {
 			}
 		}
 	}
+	
 }

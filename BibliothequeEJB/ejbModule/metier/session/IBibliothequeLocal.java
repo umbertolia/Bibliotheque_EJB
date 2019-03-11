@@ -40,5 +40,7 @@ public interface IBibliothequeLocal {
 	public void emprunter(Long refArticle, Long idPersonne) throws BibliothequeException;
 	
 	public void restituer(Long refArticle, Long idPersonne) throws BibliothequeException;
+	
+	public void initialiser() throws BibliothequeException;
 
 }
