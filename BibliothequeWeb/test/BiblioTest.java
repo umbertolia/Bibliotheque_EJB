@@ -1,8 +1,19 @@
 
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
@@ -13,7 +24,9 @@ import org.junit.runners.MethodSorters;
 
 import junit.framework.TestCase;
 import metier.constantes.Property;
-import metier.session.BibliothequeEjbImpl;
+import metier.entities.Article;
+import metier.entities.Livre;
+import metier.entities.Personne;
 import utils.BiblioUtil;
 
 
@@ -94,5 +107,69 @@ public class BiblioTest extends TestCase {
 
 	}
 	
+	@Test
+	public void test5_JdbcConnection() {
+		System.out.println("\ntest5_JdbcConnection");
+		System.out.println("----------------------");
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/bibliotheque","root","admin");  
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery("show tables from catalogue");
+			assertTrue("connection a la base OK via DriverManager", true);
+			System.out.println("Connection à la DB OK");
+		} 
+		catch (Exception exception) {
+			fail("connection a la base KO via DriverManager");
+		}		
+	}
+	
+	
+	public void test6_HibernateConf() {
+		System.out.println("\ntest6_HibernateConf");
+		System.out.println("----------------------");
+      
+		try {
+			
+			EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("BIBLIO");
+			EntityManager entityManager = entityManagerFactory.createEntityManager();
+		
+			// ajout personne en base
+			entityManager.getTransaction().begin();
+			Personne personne = new Personne(1L, "Jules", "Vernes");
+			entityManager.persist(personne);
+			entityManager.getTransaction().commit();
+			
+			// ajout d'articles en base
+			entityManager.getTransaction().begin();
+			entityManager.persist(new Livre(1l, "Livre 1", new Date()));
+			entityManager.persist(new Livre(2l, "Livre 2", new Date()));
+			entityManager.persist(new Livre(3l, "Livre 3", new Date()));
+			entityManager.getTransaction().commit();
+			
+			// liaison persoonne - articles
+			entityManager.getTransaction().begin();
+			Personne personneDB = entityManager.find(Personne.class, 1L);
+			//
+			Map<Long, Article> articlesDB = new HashMap<Long, Article>();
+			Article articleDB = entityManager.find(Article.class, 1L);
+			articlesDB.put(articleDB.getReference(), articleDB);
+			articleDB = entityManager.find(Article.class, 2L);
+			articlesDB.put(articleDB.getReference(), articleDB);
+			articleDB = entityManager.find(Article.class, 3L);
+			articlesDB.put(articleDB.getReference(), articleDB);
+			
+			personneDB.setEmprunts(articlesDB);
+			entityManager.getTransaction().commit();
+			}
+		
+			
+			catch (Throwable exception) {
+				fail("connection a la base KO via EntityManager");		
+			} 
+	}
 
+	
+	
+	
 }

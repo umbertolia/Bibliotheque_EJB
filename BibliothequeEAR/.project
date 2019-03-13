@@ -5,6 +5,7 @@
 	<projects>
 		<project>BibliothequeWeb</project>
 		<project>BibliothequeEJB</project>
+		<project>BibliothequeProperties</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

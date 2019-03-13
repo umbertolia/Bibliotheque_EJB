@@ -44,12 +44,12 @@
 	<ul>
 		<li> 
 			Declarer des fichiers properties/xml depuis le EAR
-				<ul> Ajouter les fichiers de conf dans un jar et ajouter le jar dans EAR/lib </ul>
+				<ul> Ajouter les fichiers de conf dans un jar et ajouter le jar dans EAR/lib OU mettre la conf dans un module et declarer ce module dans le EAR (Ear Module Assembly) ( </ul>
 		</li>
 		<li> Logs 
 			<ul> Afin d'utilise un Log4J perso et de by-passer les logs Jboss, il faut :
 				<li> ajouter une exclusion dans jboss-deployment-structure.xml </li>
-				<li> ajouter sa conf de logs dans un Jar (ici biblioProperties.jar issu d'un module contenant le log4j.xml) et ajouter ce jar dans EAR/lib </li>
+				<li> ajouter sa conf de logs dans un Jar (ici biblioProperties.jar issu d'un module contenant le log4j.xml) et ajouter ce jar dans EAR/lib OU mettre la conf dans un module et declarer ce module dans le EAR (Ear Module Assembly) </li>
 			</ul>
 		</li>		
 	</ul>

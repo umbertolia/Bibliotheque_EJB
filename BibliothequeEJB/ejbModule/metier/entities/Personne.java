@@ -7,6 +7,16 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 /**
  * @author Administrator
  * Auteur HDN
@@ -15,16 +25,24 @@ import java.util.Map;
  * Cette classe permet de ...
 
  */
+
+@Entity
+@Table(name="PERSONNE")
 public class Personne implements Serializable {
 	
 	private static final long serialVersionUID = -2568301396379877095L;
 
+	@Id
+	@Column(name="ID_PERSON")
 	private Long id;
 	
+	@NotEmpty
 	private String nom;
 	
+	@NotEmpty
 	private String prenom;
 	
+	@OneToMany(mappedBy="adherent",fetch=FetchType.EAGER)
 	private Map<Long, Article> emprunts = new HashMap<Long, Article>();
 	
 	/**

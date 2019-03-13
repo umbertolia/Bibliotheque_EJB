@@ -39,13 +39,11 @@ public class BibliothequeEjbImpl implements IBibliothequeLocal, IBibliothequeRem
 
 	private IPersistance persistance;
 	
-	public BibliothequeEjbImpl() {
+	public BibliothequeEjbImpl() throws BibliothequeException {
 		persistance = new DAOFactory().getDaoSystem();
 	}
 
 	private static Logger logger = Logger.getLogger(BibliothequeEjbImpl.class);
-
-	//private Stock stock = new Stock();
 
 	private final int EMPRUNTS_TAILLE_MAX = 5;
 
