@@ -3,6 +3,7 @@ package metier.interfaces;
 import org.apache.log4j.Logger;
 
 import dao.Stock;
+import dao.StockHibernate;
 import metier.BibliothequeException;
 import metier.constantes.DaoEnum;
 import utils.BiblioUtil;
@@ -18,7 +19,6 @@ public class DAOFactory {
 		
 		if (daoEnum == null) {
 			logger.fatal("Aucun DAO initialisé !!!");
-			logger.info("DAO utilisé : RAM (maps)");
 			throw new BibliothequeException("Aucun DAO initialisé !!!");
 		}	
 		switch (daoEnum) {
@@ -29,9 +29,10 @@ public class DAOFactory {
 					return new Stock();
 			}
 			case PROD : {
-				// TODO hibernate 
+				//  hibernate 
+				logger.info("DAO utilisé : Hibernate");
 				logger.info("-----------------------");
-				return null;
+				return new StockHibernate();
 			}
 			default : {
 				return new Stock();

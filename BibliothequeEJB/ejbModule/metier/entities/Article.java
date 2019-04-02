@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -46,7 +47,8 @@ public abstract class Article implements Serializable {
 	
 	private boolean disponible;
 
-	@ManyToOne
+	@ManyToOne()
+	@JoinColumn(name = "PERS_FK")
 	private Personne adherent;
 	
 	public Article() {

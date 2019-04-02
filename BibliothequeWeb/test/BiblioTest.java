@@ -1,5 +1,4 @@
 
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -34,7 +33,6 @@ import utils.BiblioUtil;
 public class BiblioTest extends TestCase {
 
 	private static Logger logger = Logger.getLogger(BiblioTest.class);
-
 
 	@Before
 	public void setUp() throws Exception {
@@ -86,7 +84,7 @@ public class BiblioTest extends TestCase {
 		BiblioUtil.parcoursEnum(Property.class);
 
 	}
-	
+
 	@Test
 	public void test4_TestConfLog4J() {
 		System.out.println("\ntest4_TestConfLog4J");
@@ -100,76 +98,112 @@ public class BiblioTest extends TestCase {
 			assertTrue(appenders.hasMoreElements());
 			while (appenders.hasMoreElements()) {
 				String appenderName = ((Appender) appenders.nextElement()).getName();
-				System.out.println("Nom de l'appender : "+appenderName);
+				System.out.println("Nom de l'appender : " + appenderName);
 			}
 
 		}
 
 	}
-	
+
 	@Test
 	public void test5_JdbcConnection() {
 		System.out.println("\ntest5_JdbcConnection");
 		System.out.println("----------------------");
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/bibliotheque","root","admin");  
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bibliotheque", "root", "admin");
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery("show tables from catalogue");
 			assertTrue("connection a la base OK via DriverManager", true);
 			System.out.println("Connection à la DB OK");
-		} 
-		catch (Exception exception) {
+		} catch (Exception exception) {
 			fail("connection a la base KO via DriverManager");
-		}		
+		}
 	}
-	
-	
+
 	public void test6_HibernateConf() {
 		System.out.println("\ntest6_HibernateConf");
 		System.out.println("----------------------");
-      
+
 		try {
-			
-			EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("BIBLIO");
+			Map<String, String> props = new HashMap<String, String>();
+			// permet un reset du schema et des donnees de la database
+			props.put("hibernate.hbm2ddl.auto", "create-drop");
+			EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("BIBLIO", props);
 			EntityManager entityManager = entityManagerFactory.createEntityManager();
-		
+
 			// ajout personne en base
 			entityManager.getTransaction().begin();
 			Personne personne = new Personne(1L, "Jules", "Vernes");
 			entityManager.persist(personne);
 			entityManager.getTransaction().commit();
-			
+
 			// ajout d'articles en base
 			entityManager.getTransaction().begin();
 			entityManager.persist(new Livre(1l, "Livre 1", new Date()));
 			entityManager.persist(new Livre(2l, "Livre 2", new Date()));
 			entityManager.persist(new Livre(3l, "Livre 3", new Date()));
+
+			// ajout liaison persoonne - articles
+			Map<Long, Article> map = new HashMap<Long, Article>();
+			Article articleDB = entityManager.find(Article.class, 1L);
+			map.put(articleDB.getReference(), articleDB);
+			articleDB = entityManager.find(Article.class, 2L);
+			map.put(articleDB.getReference(), articleDB);
+			articleDB = entityManager.find(Article.class, 3L);
+
+			map.put(articleDB.getReference(), articleDB);
+			personne.setEmprunts(map);
+
+			// ajout de la foreign key
+			for (Article article : personne.getEmprunts().values()) {
+				article.setPersonne(personne);
+			}
+
 			entityManager.getTransaction().commit();
-			
-			// liaison persoonne - articles
+
+			// ----------------------------------------
+
+			// MAJ infos
 			entityManager.getTransaction().begin();
 			Personne personneDB = entityManager.find(Personne.class, 1L);
-			//
-			Map<Long, Article> articlesDB = new HashMap<Long, Article>();
-			Article articleDB = entityManager.find(Article.class, 1L);
-			articlesDB.put(articleDB.getReference(), articleDB);
-			articleDB = entityManager.find(Article.class, 2L);
-			articlesDB.put(articleDB.getReference(), articleDB);
-			articleDB = entityManager.find(Article.class, 3L);
-			articlesDB.put(articleDB.getReference(), articleDB);
-			
-			personneDB.setEmprunts(articlesDB);
+			personneDB.setNom("Mandela");
+			personneDB.setPrenom("Nelson");
+
+			Article livre2 = entityManager.find(Article.class, 2L);
+			livre2.setIntitule("Nouveau titre");
+
+			entityManager.merge(personneDB);
+			entityManager.merge(livre2);
+
 			entityManager.getTransaction().commit();
-			}
-		
-			
-			catch (Throwable exception) {
-				fail("connection a la base KO via EntityManager");		
-			} 
+
+			// suppr du lien : on libere la foreign key
+			entityManager.getTransaction().begin();
+			personneDB = entityManager.find(Personne.class, 1L);
+
+			entityManager.find(Article.class, 2L).setPersonne(null);
+			// personneDB.getEmprunts().remove(2L);
+			entityManager.getTransaction().commit();
+
+			entityManager.getTransaction().begin();
+			Personne personne2 = new Personne(2L, "De Amorin", "Humberto");
+			entityManager.persist(personne2);
+			personne2.getEmprunts().put(livre2.getReference(), livre2);
+			livre2.setPersonne(personne2);
+
+			entityManager.getTransaction().commit();
+
+			personneDB = entityManager.find(Personne.class, 1L);
+			personne2 = entityManager.find(Personne.class, 2L);
+
+			entityManager.close();
+			entityManagerFactory.close();
+		}
+
+		catch (Throwable exception) {
+			fail("connection a la base KO via EntityManager");
+		}
 	}
 
-	
-	
-	
 }

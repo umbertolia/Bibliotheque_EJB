@@ -57,7 +57,7 @@ public class BibliothequeEjbImpl implements IBibliothequeLocal, IBibliothequeRem
 			ajouterStock(new Livre(789L, "Livre 3", new Date()), ActionEnum.CREER);
 			logger.info("Initialisation Ajout de 3 Livres depuis l'EJB");
 		} catch (BibliothequeException bibliothequeException) {
-			// TODO ajout dans les logs
+			logger.info("ERREUR avec l'init de l' EJB Biblio");
 		}
 	}
 	
@@ -75,7 +75,7 @@ public class BibliothequeEjbImpl implements IBibliothequeLocal, IBibliothequeRem
 	@Override
 	@Lock(LockType.READ)
 	public Article consulterArticle(Long reference) throws BibliothequeException {
-		return persistance.consulterArticle(reference);
+		return persistance.consulterArticle(reference, ActionEnum.CONSULTER);
 	}
 
 	@Override

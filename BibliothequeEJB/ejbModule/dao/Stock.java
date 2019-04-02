@@ -85,7 +85,6 @@ public class Stock implements IPersistance, Serializable {
 
 	@Override
 	public void initialiser() {
-		// TODO Auto-generated method stub
 		try {
 			ajouterStock(new Livre(1L, "Livre 111", new Date()), ActionEnum.CREER);
 			ajouterStock(new Livre(2L, "Livre 222", new Date()), ActionEnum.CREER);
@@ -107,7 +106,6 @@ public class Stock implements IPersistance, Serializable {
 			logger.info("Initialisation Ajout d'une personne depuis l'incercepteur");
 		}
 		catch (BibliothequeException bibliothequeException) {
-			// TODO ajout dans les logs
 		}
 		
 	}
@@ -121,7 +119,7 @@ public class Stock implements IPersistance, Serializable {
 		return new ArrayList<Article>(this.inventaire.values());
 	}
 	
-	public Article consulterArticle(Long reference) throws BibliothequeException {
+	public Article consulterArticle(Long reference, ActionEnum actionEnum) throws BibliothequeException {
 		Article article = this.inventaire.get(reference);
 		if (article == null) {
 			throw new BibliothequeException("Article id=[" + reference + "] introuvable");
@@ -205,7 +203,7 @@ public class Stock implements IPersistance, Serializable {
 		}
 		// on verifie si le livre existe puis on l'enleve du stock
 		try {
-			article = consulterArticle(refArticle);
+			article = consulterArticle(refArticle, ActionEnum.CONSULTER);
 		} catch (BibliothequeException exception) {
 			// on regarde si le livre est deja emprunté sinon on laisse
 			// l'exeception telle qu'elle
@@ -248,7 +246,7 @@ public class Stock implements IPersistance, Serializable {
 		if (article != null) {
 			switch (actionEnum) {
 				case CREER: {
-					if (this.inventaire.containsKey(article.getReference())) {
+					if (consulterArticle(article.getReference(), actionEnum) != null) {
 						throw new BibliothequeException(article + " existe deja !");
 					}
 					this.inventaire.put(article.getReference(), article);
@@ -258,7 +256,7 @@ public class Stock implements IPersistance, Serializable {
 					if (!this.inventaire.containsKey(article.getReference())) {
 						throw new BibliothequeException(article + " n'existe pas !");
 					}
-					Article articleDB = consulterArticle(article.getReference());
+					Article articleDB = consulterArticle(article.getReference(), actionEnum);
 					articleDB.setIntitule(article.getIntitule());
 					this.inventaire.put(articleDB.getReference(), articleDB);
 					break;

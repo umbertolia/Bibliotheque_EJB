@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -42,7 +43,8 @@ public class Personne implements Serializable {
 	@NotEmpty
 	private String prenom;
 	
-	@OneToMany(mappedBy="adherent",fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="adherent", fetch=FetchType.LAZY)
+	@MapKeyColumn(name = "ID_ART_KEYS", nullable=true)
 	private Map<Long, Article> emprunts = new HashMap<Long, Article>();
 	
 	/**

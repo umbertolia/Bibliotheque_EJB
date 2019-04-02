@@ -13,7 +13,7 @@ public interface IPersistance {
 	
 	List<Article> consulterInventaire() throws BibliothequeException;
 	
-	Article consulterArticle(Long reference) throws BibliothequeException;
+	Article consulterArticle(Long reference, ActionEnum actionEnum) throws BibliothequeException;
 	
 	List<Article> consulterArticlesParTitre(String titre);
 	

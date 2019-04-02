@@ -36,15 +36,29 @@
 		<li> ajout des jars log4j-1.2.17.jar</li>
 		<li> eclipse IDE 2018-12 </li>
 		<li> la datasource est simulee avec des Maps</li>
+		<li> Hibernate 4.0.1 ( + Mysql 5.1.6 en guisee de sgbdr</li>
 		<li> SoapUI pour tester les services Soap</li>
 	</ul>
 </li>
 
 <li> Solved Issues
 	<ul>
+		<li>
+			Dependances Hibernate / dépendance MySql
+				<ul>
+					JBoss utilise ces propres librairies Hibernate. Pour déclarer la dépendance MySql, il faut :
+					<li>
+					 	créer les dossiers com, mysql, main et créer un module.xml issu de  <jBoss_rep>\modules\com\mysql\main et y déposer le jar mysql-connector-java-5.1.6.jar
+					 </li>
+					 <li>
+					 ajouter la dependance com.mysql dans le module.xml issu de <jBoss_rep>\modules\org.hibernate\main
+					 </li>
+				</ul>
+		</li>
 		<li> 
 			Declarer des fichiers properties/xml depuis le EAR
-				<ul> Ajouter les fichiers de conf dans un jar et ajouter le jar dans EAR/lib OU mettre la conf dans un module et declarer ce module dans le EAR (Ear Module Assembly) ( </ul>
+				<ul> Ajouter les fichiers de conf dans un jar et ajouter le jar dans EAR/lib OU mettre la conf dans un module et declarer ce module dans le EAR (Ear Module Assembly) 
+				</ul>
 		</li>
 		<li> Logs 
 			<ul> Afin d'utilise un Log4J perso et de by-passer les logs Jboss, il faut :
