@@ -44,6 +44,12 @@
 <li> Solved Issues
 	<ul>
 		<li>
+			Clé d'une map non propagée en base 
+			<ul>
+				jBoss 7.1 embarque hibernate 4.0.1 par defaut. Avec cette version, lors de l'ajout d'un element dans une map, la clé de l'objet n'est pas propagée dans la base (ID_ART_KEYS). Il faut dans ce cas partir de la version 4.2 de hibernate pour que la clé soit présente en base.
+			</ul>
+		</li>
+		<li>
 			Dependances Hibernate / dépendance MySql
 				<ul>
 					JBoss utilise ces propres librairies Hibernate. Pour déclarer la dépendance MySql, il faut :

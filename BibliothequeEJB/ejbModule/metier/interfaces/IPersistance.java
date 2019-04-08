@@ -23,7 +23,7 @@ public interface IPersistance {
 	
 	public void ajouterPersonne(Personne personne, ActionEnum actionEnum) throws BibliothequeException;
 	
-	public Personne recupererPersonne(Long idPersonne) throws BibliothequeException;
+	public Personne recupererPersonne(Long idPersonne, ActionEnum actionEnum) throws BibliothequeException;
 	
 	public List<Personne> recupererPersonnes() throws BibliothequeException;
 	

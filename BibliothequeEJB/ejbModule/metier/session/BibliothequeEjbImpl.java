@@ -99,7 +99,7 @@ public class BibliothequeEjbImpl implements IBibliothequeLocal, IBibliothequeRem
 	@Override
 	@Lock(LockType.READ)
 	public Personne recupererPersonne(Long idPersonne) throws BibliothequeException {
-		return persistance.recupererPersonne(idPersonne);
+		return persistance.recupererPersonne(idPersonne, ActionEnum.CONSULTER);
 	}
 
 	@Override

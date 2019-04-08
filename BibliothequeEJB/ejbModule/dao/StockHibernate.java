@@ -68,7 +68,7 @@ public class StockHibernate implements IPersistance, Serializable {
 		logger.info("consulterArticle()");
 		entityManager.getTransaction().begin();
 		Article article = entityManager.find(Article.class, reference);
-		if (article == null && actionEnum.equals(ActionEnum.CONSULTER)) {
+		if (article == null && !actionEnum.equals(ActionEnum.CREER)) {
 			entityManager.getTransaction().rollback();
 			throw new BibliothequeException("Article id=[" + reference + "] introuvable");
 		}
@@ -130,7 +130,7 @@ public class StockHibernate implements IPersistance, Serializable {
 		List<Article> emprunts = new ArrayList<Article>();
 		if (idPersonne != null) {
 			// recup de la personne
-			for (Article article : recupererPersonne(idPersonne).getEmprunts().values()) {
+			for (Article article : recupererPersonne(idPersonne, ActionEnum.CONSULTER).getEmprunts().values()) {
 				emprunts.add(article);
 			}
 		}
@@ -143,7 +143,7 @@ public class StockHibernate implements IPersistance, Serializable {
 		if (personne != null) {
 			switch (actionEnum) {
 				case CREER: {
-					if (recupererPersonne(personne.getId()) != null) {
+					if (recupererPersonne(personne.getId(), actionEnum) != null) {
 						throw new BibliothequeException("L'id " + personne.getId() + " existe deja !");
 					}
 					entityManager.getTransaction().begin();
@@ -153,7 +153,7 @@ public class StockHibernate implements IPersistance, Serializable {
 				}
 				case MODIFIER: {
 					// verif si la personne est en DB
-					Personne personneDB = recupererPersonne(personne.getId());
+					Personne personneDB = recupererPersonne(personne.getId(), actionEnum);
 					personneDB.setNom(personne.getNom());
 					personneDB.setPrenom(personne.getPrenom());
 					entityManager.getTransaction().begin();
@@ -170,14 +170,14 @@ public class StockHibernate implements IPersistance, Serializable {
 	}
 
 	@Override
-	public Personne recupererPersonne(Long idPersonne) throws BibliothequeException {
+	public Personne recupererPersonne(Long idPersonne, ActionEnum actionEnum) throws BibliothequeException {
 		logger.info("recupererPersonne()");
 		entityManager.getTransaction().begin();
 		Personne personne = null;
 		if (idPersonne != null) {
 			personne = entityManager.find(Personne.class, idPersonne);
 		}
-		if (personne == null) {
+		if (personne == null && !actionEnum.equals(ActionEnum.CREER)) {
 			entityManager.getTransaction().rollback();
 			throw new BibliothequeException("Personne introuvable avec l'id " + idPersonne);
 		}
@@ -200,16 +200,41 @@ public class StockHibernate implements IPersistance, Serializable {
 
 	@Override
 	public void emprunter(Long refArticle, Long idPersonne, int empruntTailleMax) throws BibliothequeException {
-		// TODO Auto-generated method stub
-		logger.info("recupererPersonneIdNomPrenom()");
-
+		logger.info("emprunter()");
+		// emprunt possible ?
+		if (consulterEmprunts(idPersonne).size() >= empruntTailleMax) {
+			throw new BibliothequeException("Emprunt impossible : Vous avez atteint le nombre max d'emprunts");
+		}
+		Article article = entityManager.find(Article.class, refArticle);
+		Personne adherent = entityManager.find(Personne.class, idPersonne);
+		if (adherent.getEmprunts().get(refArticle) != null) {
+			throw new BibliothequeException("Emprunt impossible : Livre id=[" + refArticle + "] deja emprunté");
+		}
+		// MAJ de la BDD
+		entityManager.getTransaction().begin();
+		adherent.getEmprunts().put(article.getReference(), article);
+		article.setPersonne(adherent);
+		article.setDisponible(false);
+		entityManager.getTransaction().commit();
 	}
 
 	@Override
 	public void restituer(Long refArticle, Long idPersonne) throws BibliothequeException {
-		// TODO Auto-generated method stub
-		logger.info("recupererPersonneIdNomPrenom()");
-
+		logger.info("restituer()");
+		
+		Personne personne = recupererPersonne(idPersonne, ActionEnum.CONSULTER);
+		Article article = personne.getEmprunts().get(refArticle);
+		try {
+			consulterArticle(article.getReference(), ActionEnum.CONSULTER);
+		}
+		catch (BibliothequeException bibliothequeException) {
+			throw new BibliothequeException("Restitution impossible : livre inexistant en base");
+		}
+		entityManager.getTransaction().begin();
+		personne.getEmprunts().remove(article.getReference());
+		article.setPersonne(null);
+		article.setDisponible(true);
+		entityManager.getTransaction().commit();
 	}
 
 	@Override
@@ -231,4 +256,22 @@ public class StockHibernate implements IPersistance, Serializable {
 		return query.getSingleResult();
 	}
 
+	public EntityManagerFactory getEntityManagerFactory() {
+		return entityManagerFactory;
+	}
+
+	public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+		this.entityManagerFactory = entityManagerFactory;
+	}
+
+	public EntityManager getEntityManager() {
+		return entityManager;
+	}
+
+	public void setEntityManager(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
+
+	
+	
 }

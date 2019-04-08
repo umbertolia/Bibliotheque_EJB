@@ -18,10 +18,13 @@ import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import dao.StockHibernate;
 import junit.framework.TestCase;
+import metier.constantes.ActionEnum;
 import metier.constantes.Property;
 import metier.entities.Article;
 import metier.entities.Livre;
@@ -121,6 +124,8 @@ public class BiblioTest extends TestCase {
 		}
 	}
 
+	
+	@Test
 	public void test6_HibernateConf() {
 		System.out.println("\ntest6_HibernateConf");
 		System.out.println("----------------------");
@@ -128,12 +133,12 @@ public class BiblioTest extends TestCase {
 		try {
 			Map<String, String> props = new HashMap<String, String>();
 			// permet un reset du schema et des donnees de la database
-			props.put("hibernate.hbm2ddl.auto", "create-drop");
+			props.put("hibernate.hbm2ddl.auto", "update");
 			EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("BIBLIO", props);
 			EntityManager entityManager = entityManagerFactory.createEntityManager();
 
 			// ajout personne en base
-			entityManager.getTransaction().begin();
+		/*	entityManager.getTransaction().begin();
 			Personne personne = new Personne(1L, "Jules", "Vernes");
 			entityManager.persist(personne);
 			entityManager.getTransaction().commit();
@@ -143,21 +148,22 @@ public class BiblioTest extends TestCase {
 			entityManager.persist(new Livre(1l, "Livre 1", new Date()));
 			entityManager.persist(new Livre(2l, "Livre 2", new Date()));
 			entityManager.persist(new Livre(3l, "Livre 3", new Date()));
+			entityManager.getTransaction().commit();*/
 
 			// ajout liaison persoonne - articles
-			Map<Long, Article> map = new HashMap<Long, Article>();
+			entityManager.getTransaction().begin();
+			Personne personne = entityManager.find(Personne.class, 1L);
 			Article articleDB = entityManager.find(Article.class, 1L);
-			map.put(articleDB.getReference(), articleDB);
-			articleDB = entityManager.find(Article.class, 2L);
-			map.put(articleDB.getReference(), articleDB);
+			personne.getEmprunts().put(articleDB.getReference(), articleDB);
+			
+			/*articleDB = entityManager.find(Article.class, 2L);
+			personne.getEmprunts().put(articleDB.getReference(), articleDB);
 			articleDB = entityManager.find(Article.class, 3L);
-
-			map.put(articleDB.getReference(), articleDB);
-			personne.setEmprunts(map);
-
+			personne.getEmprunts().put(articleDB.getReference(), articleDB);*/
+			
 			// ajout de la foreign key
 			for (Article article : personne.getEmprunts().values()) {
-				article.setPersonne(personne);
+			//	article.setPersonne(personne);
 			}
 
 			entityManager.getTransaction().commit();
@@ -205,5 +211,25 @@ public class BiblioTest extends TestCase {
 			fail("connection a la base KO via EntityManager");
 		}
 	}
+	
+	@Ignore
+	@Test
+	public void test7_StockHibernate() {
+		System.out.println("\test7_StockHibernate");
+		System.out.println("----------------------");
 
+		try {
+			// permet un reset du schema et des donnees de la database
+			EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("BIBLIO");
+			EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+			StockHibernate stockHibernate = new StockHibernate();
+			stockHibernate.setEntityManager(entityManager);
+			stockHibernate.setEntityManagerFactory(entityManagerFactory);
+			Personne personne = stockHibernate.recupererPersonne(1L, ActionEnum.CONSULTER);
+		}	
+		catch (Throwable exception) {
+			fail("connection a la base KO via EntityManager");
+		}
+	}
 }

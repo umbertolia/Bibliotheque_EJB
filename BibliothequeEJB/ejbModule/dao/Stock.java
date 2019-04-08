@@ -121,7 +121,7 @@ public class Stock implements IPersistance, Serializable {
 	
 	public Article consulterArticle(Long reference, ActionEnum actionEnum) throws BibliothequeException {
 		Article article = this.inventaire.get(reference);
-		if (article == null) {
+		if (article == null && actionEnum.equals(ActionEnum.CONSULTER)) {
 			throw new BibliothequeException("Article id=[" + reference + "] introuvable");
 		}
 		return article;
@@ -143,7 +143,7 @@ public class Stock implements IPersistance, Serializable {
 		List<Article> emprunts = new ArrayList<Article>();
 		if (idPersonne != null && personnes != null) {
 			// recup de la personne
-			for (Article article : recupererPersonne(idPersonne).getEmprunts().values()) {
+			for (Article article : recupererPersonne(idPersonne, ActionEnum.CONSULTER).getEmprunts().values()) {
 				emprunts.add(article);
 			}
 		}
@@ -162,7 +162,7 @@ public class Stock implements IPersistance, Serializable {
 				}
 				case MODIFIER: {
 					// verif si la personne est en DB
-					Personne personneDB = recupererPersonne(personne.getId());
+					Personne personneDB = recupererPersonne(personne.getId(), actionEnum);
 					personneDB.setNom(personne.getNom());
 					personneDB.setPrenom(personne.getPrenom());
 					personnes.put(personneDB.getId(), personneDB);
@@ -176,12 +176,12 @@ public class Stock implements IPersistance, Serializable {
 		}
 	}
 	
-	public Personne recupererPersonne(Long idPersonne) throws BibliothequeException {
+	public Personne recupererPersonne(Long idPersonne, ActionEnum actionEnum) throws BibliothequeException {
 		Personne personne = null;
 		if (idPersonne != null && personnes != null) {
 			personne = personnes.get(idPersonne);
 		}
-		if (personne == null) {
+		if (personne == null  && !actionEnum.equals(ActionEnum.CREER)) {
 			throw new BibliothequeException("Personne introuvable avec l'id " + idPersonne);
 		}
 		return personne;
@@ -207,7 +207,7 @@ public class Stock implements IPersistance, Serializable {
 		} catch (BibliothequeException exception) {
 			// on regarde si le livre est deja emprunté sinon on laisse
 			// l'exeception telle qu'elle
-			adherent = recupererPersonne(idPersonne);
+			adherent = recupererPersonne(idPersonne, ActionEnum.CONSULTER);
 			if (adherent != null) {
 				if (adherent.getEmprunts().get(refArticle) != null) {
 					throw new BibliothequeException("Emprunt impossible : Livre id=[" + refArticle + "] deja emprunté");
@@ -217,12 +217,12 @@ public class Stock implements IPersistance, Serializable {
 		}
 
 		// MAJ des maps
-		recupererPersonne(idPersonne).getEmprunts().put(article.getReference(), article);
+		recupererPersonne(idPersonne, ActionEnum.CONSULTER).getEmprunts().put(article.getReference(), article);
 		this.inventaire.remove(article.getReference());
 	}
 	
 	public void restituer(Long refArticle, Long idPersonne) throws BibliothequeException {
-		Personne personne = recupererPersonne(idPersonne);
+		Personne personne = recupererPersonne(idPersonne, ActionEnum.CONSULTER);
 
 		Article article = personne.getEmprunts().get(refArticle);
 		if (article == null) {
@@ -235,7 +235,7 @@ public class Stock implements IPersistance, Serializable {
 	public Personne recupererPersonneIdNomPrenom(Personne personne) throws BibliothequeException {
 		Personne personneDB = null;
 
-		personneDB = recupererPersonne(personne.getId());
+		personneDB = recupererPersonne(personne.getId(), ActionEnum.CONSULTER);
 		if (!personneDB.equals(personne)) {
 			throw new BibliothequeException(personne + " inexistante en base");
 		}

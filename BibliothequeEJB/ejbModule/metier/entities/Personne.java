@@ -43,7 +43,7 @@ public class Personne implements Serializable {
 	@NotEmpty
 	private String prenom;
 	
-	@OneToMany(mappedBy="adherent", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="adherent", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@MapKeyColumn(name = "ID_ART_KEYS", nullable=true)
 	private Map<Long, Article> emprunts = new HashMap<Long, Article>();
 	
