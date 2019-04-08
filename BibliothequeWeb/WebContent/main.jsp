@@ -15,7 +15,7 @@
 </head>
 
 
-<body onload="loadEvents()">
+<body>
 	<table>
 		<tr>
 			<td valign="top"><c:import url="personnes.jsp"></c:import></td>

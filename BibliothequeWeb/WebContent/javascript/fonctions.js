@@ -1,8 +1,3 @@
-function loadEvents() {
-
-}
-
-
 /**
  * validation du formulaire Personne
  */

@@ -35,8 +35,8 @@
 		<li> JAVA 7</li>
 		<li> ajout des jars log4j-1.2.17.jar</li>
 		<li> eclipse IDE 2018-12 </li>
-		<li> la datasource est simulee avec des Maps</li>
-		<li> Hibernate 4.0.1 ( + Mysql 5.1.6 en guisee de sgbdr</li>
+		<li> Pour les tests la datasource est simulee avec des Maps</li>
+		<li> Hibernate 4.2.21  + Mysql 5.1.6 en guisee de sgbdr</li>
 		<li> SoapUI pour tester les services Soap</li>
 	</ul>
 </li>
